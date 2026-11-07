@@ -9,7 +9,7 @@ import DynInteractive from './components/DynInteractive';
 import MedicalInteractive from './components/MedicalInteractive';
 import QuadrupedInteractive from './components/QuadrupedInteractive';
 import RobotConfigurator from './components/RobotConfigurator';
-import { markSvg } from './svg';
+import { markSvg, YARD_SVG } from './svg';
 import { useRoute, useTheme } from './hooks';
 import { Eyebrow, Band, Head, IconCard, Cta, PageHead, Pipeline } from './components/Parts';
 
