@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unexpected Dynamics | Autonomous Industrial Inspection Robotics</title>
+  <meta name="description" content="Autonomous quadruped inspection robots engineered for extreme terrains: 220kV-765kV power substations, oil refineries, and heavy industry." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Tokens & Theming */
+    :root {
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-base: #080b11;
+      --bg-surface: #0f1422;
+      --bg-card: #141c2e;
+      --bg-card-hover: #1a253c;
+      --border-subtle: #202b42;
+      --border-active: #3b4d75;
+      
+      --text-main: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      
+      --hazard-yellow: #f59e0b;
+      --hazard-yellow-hover: #d97706;
+      --hazard-yellow-glow: rgba(245, 158, 11, 0.25);
+      
+      --electric-cyan: #06b6d4;
+      --electric-cyan-glow: rgba(6, 182, 212, 0.25);
+      
+      --alert-crimson: #ef4444;
+      --alert-glow: rgba(239, 68, 68, 0.25);
+      --success-emerald: #10b981;
+      --success-glow: rgba(16, 185, 129, 0.25);
+      
+      --grid-line: rgba(255, 255, 255, 0.02);
+      --nav-blur-bg: rgba(8, 11, 17, 0.85);
+      --shadow-elevation: 0 20px 40px rgba(0, 0, 0, 0.6);
+      --focus-outline: 2px solid var(--hazard-yellow);
+    }
+
+    /* Light Theme Variant */
+    [data-theme="light"] {
+      --bg-base: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-card: #f1f5f9;
+      --bg-card-hover: #e2e8f0;
+      --border-subtle: #cbd5e1;
+      --border-active: #94a3b8;
+      
+      --text-main: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+      
+      --hazard-yellow: #d97706;
+      --hazard-yellow-hover: #b45309;
+      --hazard-yellow-glow: rgba(217, 119, 6, 0.2);
+      
+      --electric-cyan: #0891b2;
+      --electric-cyan-glow: rgba(8, 145, 178, 0.2);
+      
+      --grid-line: rgba(0, 0, 0, 0.03);
+      --nav-blur-bg: rgba(255, 255, 255, 0.9);
+      --shadow-elevation: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+      background-image: 
+        linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+        linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    /* Accessibility focus styling */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+      outline: var(--focus-outline);
+      outline-offset: 3px;
+    }
+
+    .container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header & Navigation */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: var(--nav-blur-bg);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-logo-icon {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-surface));
+      border: 1px solid var(--hazard-yellow);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px var(--hazard-yellow-glow);
+    }
+
+    .brand-logo-icon svg {
+      width: 24px;
+      height: 24px;
+      stroke: var(--hazard-yellow);
+    }
+
+    .brand-tag {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: var(--hazard-yellow);
+      background: var(--hazard-yellow-glow);
+      border: 1px solid var(--hazard-yellow);
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Navigation Links */
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      list-style: none;
+    }
+
+    .nav-link-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-secondary);
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-link-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-card);
+    }
+
+    .nav-link-btn.active {
+      color: var(--text-main);
+      background: var(--bg-card);
+      border-color: var(--border-active);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .nav-link-btn.active .nav-dot {
+      background: var(--hazard-yellow);
+      box-shadow: 0 0 8px var(--hazard-yellow);
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: transparent;
+      transition: background 0.2s ease;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      border-color: var(--border-active);
+      color: var(--hazard-yellow);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 8px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: var(--hazard-yellow);
+      color: #000;
+      box-shadow: 0 0 16px var(--hazard-yellow-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--hazard-yellow-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border-subtle);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--border-active);
+      background: var(--bg-card);
+    }
+
+    /* Live Telemetry Ticker */
+    .telemetry-ticker {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 8px 0;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .ticker-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .status-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--success-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--success-emerald);
+      animation: pulse-ring 2s infinite;
+      display: inline-block;
+      margin-right: 6px;
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.9); opacity: 0.7; }
+      50% { transform: scale(1.15); opacity: 1; }
+      100% { transform: scale(0.9); opacity: 0.7; }
+    }
+
+    /* Main Container Views */
+    .view-content {
+      padding: 48px 0 80px;
+      min-height: calc(100vh - 240px);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 48px;
+      align-items: center;
+      margin-bottom: 72px;
+    }
+
+    @media (max-width: 960px) {
+      .hero-section {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      background: var(--hazard-yellow-glow);
+      border: 1px solid var(--hazard-yellow);
+      color: var(--hazard-yellow);
+      font-size: 0.825rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 20px;
+    }
+
+    .hero-title span.highlight {
+      background: linear-gradient(135deg, var(--hazard-yellow), #fde047);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+      font-weight: 400;
+      max-width: 640px;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Animated Robot Stage & Canvas */
+    .robot-stage {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .stage-hud {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Quadruped SVG Animation Styles */
+    .quadruped-svg {
+      width: 100%;
+      height: 320px;
+      display: block;
+      overflow: visible;
+    }
+
+    /* Gait cycle animations */
+    @keyframes bodyBob {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(3px) rotate(-0.5deg); }
+      50% { transform: translateY(-2px) rotate(0.5deg); }
+      75% { transform: translateY(3px) rotate(-0.5deg); }
+    }
+
+    @keyframes legPairA-Thigh {
+      0% { transform: rotate(-18deg); }
+      25% { transform: rotate(14deg); }
+      50% { transform: rotate(26deg); }
+      75% { transform: rotate(-5deg); }
+      100% { transform: rotate(-18deg); }
+    }
+
+    @keyframes legPairA-Shank {
+      0% { transform: rotate(22deg); }
+      25% { transform: rotate(-28deg); }
+      50% { transform: rotate(-45deg); }
+      75% { transform: rotate(-10deg); }
+      100% { transform: rotate(22deg); }
+    }
+
+    @keyframes legPairB-Thigh {
+      0% { transform: rotate(26deg); }
+      25% { transform: rotate(-5deg); }
+      50% { transform: rotate(-18deg); }
+      75% { transform: rotate(14deg); }
+      100% { transform: rotate(26deg); }
+    }
+
+    @keyframes legPairB-Shank {
+      0% { transform: rotate(-45deg); }
+      25% { transform: rotate(-10deg); }
+      50% { transform: rotate(22deg); }
+      75% { transform: rotate(-28deg); }
+      100% { transform: rotate(-45deg); }
+    }
+
+    @keyframes lidarSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes scanConeSweep {
+      0%, 100% { transform: rotate(-12deg); opacity: 0.4; }
+      50% { transform: rotate(18deg); opacity: 0.85; }
+    }
+
+    @keyframes groundDash {
+      0% { stroke-dashoffset: 0; }
+      100% { stroke-dashoffset: -48; }
+    }
+
+    @keyframes antennaWhip {
+      0%, 100% { transform: rotate(-2deg); }
+      50% { transform: rotate(3deg); }
+    }
+
+    .anim-body {
+      animation: bodyBob 1.2s ease-in-out infinite;
+      transform-origin: 200px 150px;
+    }
+
+    .anim-leg-pair-a-thigh {
+      animation: legPairA-Thigh 1.2s ease-in-out infinite;
+    }
+    .anim-leg-pair-a-shank {
+      animation: legPairA-Shank 1.2s ease-in-out infinite;
+    }
+
+    .anim-leg-pair-b-thigh {
+      animation: legPairB-Thigh 1.2s ease-in-out infinite;
+    }
+    .anim-leg-pair-b-shank {
+      animation: legPairB-Shank 1.2s ease-in-out infinite;
+    }
+
+    .anim-lidar-spin {
+      animation: lidarSpin 2s linear infinite;
+      transform-origin: 240px 85px;
+    }
+
+    .anim-scan-cone {
+      animation: scanConeSweep 2.4s ease-in-out infinite;
+      transform-origin: 320px 105px;
+    }
+
+    .anim-ground {
+      stroke-dasharray: 12 12;
+      animation: groundDash 1.2s linear infinite;
+    }
+
+    .anim-antenna {
+      animation: antennaWhip 1.2s ease-in-out infinite;
+      transform-origin: 125px 95px;
+    }
+
+    /* Manifesto Box */
+    .manifesto-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 36px;
+      margin-bottom: 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    @media (max-width: 800px) {
+      .manifesto-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Card Grids */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 0.2s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--border-active);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      color: var(--hazard-yellow);
+    }
+
+    /* Inspector Console Styles */
+    .console-wrapper {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow-elevation);
+    }
+
+    .console-header {
+      background: var(--bg-card);
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .console-body {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      min-height: 520px;
+    }
+
+    @media (max-width: 990px) {
+      .console-body {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .viewport-canvas {
+      position: relative;
+      background: #020617;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      overflow: hidden;
+    }
+
+    .viewport-sidebar {
+      background: var(--bg-card);
+      border-left: 1px solid var(--border-subtle);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Pipeline Animated Cards */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      position: relative;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 960px) {
+      .pipeline-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pipeline-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .pipeline-node.active-stage {
+      border-color: var(--hazard-yellow);
+      box-shadow: 0 0 20px var(--hazard-yellow-glow);
+    }
+
+    .pipeline-number {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--hazard-yellow);
+      margin-bottom: 12px;
+    }
+
+    /* Radar Ping Animation */
+    .radar-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 1px solid var(--electric-cyan);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+
+    .radar-sweep-arm {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, rgba(6, 182, 212, 0.4) 0deg, transparent 60deg, transparent 360deg);
+      animation: lidarSpin 3s linear infinite;
+    }
+
+    /* Form Styles */
+    .form-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-base);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--hazard-yellow);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-subtle);
+      padding: 40px 0;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: var(--bg-surface);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+  </style>
+
+  <!-- React 18 & ReactDOM 18 loaded safely from reliable CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+</head>
+<body>
+  <div id="root">
+    <!-- Fallback while React loads -->
+    <div style="padding: 40px; text-align: center; color: #f59e0b; font-family: sans-serif;">
+      <h2>Loading Unexpected Dynamics Platform...</h2>
+    </div>
+  </div>
+
+  <script>
+    // Pure React calls without Babel for safety & zero compilation dependencies
+    (function () {
+      if (!window.React || !window.ReactDOM) {
+        console.error("React script failed to load. Please check internet connection.");
+        return;
+      }
+
+      const e = React.createElement;
+      const useState = React.useState;
+      const useEffect = React.useEffect;
+      const useMemo = React.useMemo;
+
+      // Master Application Component
+      function App() {
+        // Routing state: 'home', 'inspector', 'dyn', 'pipeline', 'raas'
+        const [currentRoute, setCurrentRoute] = useState(function() {
+          const hash = window.location.hash.replace('#', '');
+          return ['home', 'inspector', 'dyn', 'pipeline', 'raas'].includes(hash) ? hash : 'home';
+        });
+
+        // Theme state: 'dark' | 'light'
+        const [theme, setTheme] = useState('dark');
+
+        // Sync route changes
+        useEffect(function() {
+          function handleHashChange() {
+            const hash = window.location.hash.replace('#', '');
+            if (['home', 'inspector', 'dyn', 'pipeline', 'raas'].includes(hash)) {
+              setCurrentRoute(hash);
+            }
+          }
+          window.addEventListener('hashchange', handleHashChange);
+          return function() {
+            window.removeEventListener('hashchange', handleHashChange);
+          };
+        }, []);
+
+        // Sync theme changes
+        useEffect(function() {
+          document.documentElement.setAttribute('data-theme', theme);
+        }, [theme]);
+
+        function navigate(route) {
+          window.location.hash = route;
+          setCurrentRoute(route);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleTheme() {
+          setTheme(function(prev) { return prev === 'dark' ? 'light' : 'dark'; });
+        }
+
+        return e('div', { className: 'app-root' },
+          // Telemetry Ticker
+          e('div', { className: 'telemetry-ticker mono' },
+            e('div', { className: 'container ticker-inner' },
+              e('div', null,
+                e('span', { className: 'status-pulse' }),
+                e('strong', null, 'VAJRA-01 FIELD STATUS: '),
+                '400KV SWITCHYARD BAY 04 ROUTINE // ALL JOINTS NOMINAL'
+              ),
+              e('div', null,
+                'FARADAY EMF SHIELD: ',
+                e('span', { style: { color: 'var(--success-emerald)', fontWeight: 700 } }, '765KV CERTIFIED'),
+                ' | BATTERY: ',
+                e('strong', null, '88% (AUTODOCK ENGAGED)')
+              )
+            )
+          ),
+
+          // Header Navigation
+          e('header', null,
+            e('div', { className: 'container nav-inner' },
+              // Logo
+              e('a', {
+                href: '#home',
+                onClick: function(ev) { ev.preventDefault(); navigate('home'); },
+                className: 'brand-logo'
+              },
+                e('div', { className: 'brand-logo-icon' },
+                  e('svg', { viewBox: '0 0 24 24', fill: 'none', strokeWidth: 2, strokeLinecap: 'round', strokeLinejoin: 'round' },
+                    e('rect', { x: 4, y: 4, width: 16, height: 16, rx: 3 }),
+                    e('path', { d: 'M9 9h6v6H9z' }),
+                    e('path', { d: 'M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3' })
+                  )
+                ),
+                'Unexpected Dynamics',
+                e('span', { className: 'brand-tag' }, 'Deep Tech India')
+              ),
+
+              // Nav items
+              e('nav', null,
+                e('ul', { className: 'nav-links' },
+                  e('li', null,
+                    e('button', {
+                      className: 'nav-link-btn' + (currentRoute === 'home' ? ' active' : ''),
+                      onClick: function() { navigate('home'); }
+                    },
+                      e('span', { className: 'nav-dot' }),
+                      'Overview'
+                    )
+                  ),
+                  e('li', null,
+                    e('button', {
+                      className: 'nav-link-btn' + (currentRoute === 'inspector' ? ' active' : ''),
+                      onClick: function() { navigate('inspector'); }
+                    },
+                      e('span', { className: 'nav-dot' }),
+                      'Live Inspector'
+                    )
+                  ),
+                  e('li', null,
+                    e('button', {
+                      className: 'nav-link-btn' + (currentRoute === 'dyn' ? ' active' : ''),
+                      onClick: function() { navigate('dyn'); }
+                    },
+                      e('span', { className: 'nav-dot' }),
+                      'Dyn Mechatronics'
+                    )
+                  ),
+                  e('li', null,
+                    e('button', {
+                      className: 'nav-link-btn' + (currentRoute === 'pipeline' ? ' active' : ''),
+                      onClick: function() { navigate('pipeline'); }
+                    },
+                      e('span', { className: 'nav-dot' }),
+                      'Enterprise Pipeline'
+                    )
+                  ),
+                  e('li', null,
+                    e('button', {
+                      className: 'nav-link-btn' + (currentRoute === 'raas' ? ' active' : ''),
+                      onClick: function() { navigate('raas'); }
+                    },
+                      e('span', { className: 'nav-dot' }),
+                      'RaaS & Pilots'
+                    )
+                  )
+                )
+              ),
+
+              // Actions: Theme toggle & CTA
+              e('div', { className: 'nav-actions' },
+                e('button', {
+                  className: 'theme-toggle-btn',
+                  onClick: toggleTheme,
+                  title: 'Toggle Dark / Light Theme'
+                }, theme === 'dark' ? '☀' : '🌙'),
+                e('button', {
+                  className: 'btn btn-primary',
+                  onClick: function() { navigate('raas'); }
+                }, 'Deploy 30-Day Pilot')
+              )
+            )
+          ),
+
+          // View Switcher Container
+          e('main', { className: 'container view-content' },
+            currentRoute === 'home' && e(HomeView, { navigate: navigate }),
+            currentRoute === 'inspector' && e(InspectorView, { navigate: navigate }),
+            currentRoute === 'dyn' && e(DynView, { navigate: navigate }),
+            currentRoute === 'pipeline' && e(PipelineView, { navigate: navigate }),
+            currentRoute === 'raas' && e(RaasView, { navigate: navigate })
+          ),
+
+          // Footer
+          e('footer', null,
+            e('div', { className: 'container footer-inner' },
+              e('div', null,
+                '© 2026 Unexpected Dynamics Pvt Ltd. Incubated in India. Engineered for extreme terrains.'
+              ),
+              e('div', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontSize: '0.8rem' } },
+                'DPIIT Recognized // Make in India // High-EMF Hardened'
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // VIEW 1: HOME (Brand, Manifesto & Animated Robot)
+      // ==========================================
+      function HomeView(props) {
+        return e('div', null,
+          e('div', { className: 'hero-section' },
+            // Left Column
+            e('div', null,
+              e('div', { className: 'hero-badge mono' },
+                '⚡ AUTONOMOUS POWER & REFINERY INSPECTION'
+              ),
+              e('h1', { className: 'hero-title' },
+                'Rugged Autonomy Where ',
+                e('span', { className: 'highlight' }, 'Humans Shouldn’t Walk.')
+              ),
+              e('p', { className: 'hero-subtitle' },
+                'While others spend 30 years teaching humanoids to backflip, Unexpected Dynamics builds rugged quadruped robotics to eliminate lethal human risk in 220kV–765kV switchyards, oil refineries, and toxic chemical storage facilities.'
+              ),
+              e('div', { className: 'hero-cta-group' },
+                e('button', {
+                  className: 'btn btn-primary',
+                  onClick: function() { props.navigate('inspector'); }
+                }, 'Launch Live Substation Inspector'),
+                e('button', {
+                  className: 'btn btn-outline',
+                  onClick: function() { props.navigate('dyn'); }
+                }, 'Inspect Gait Kinematics & Mechatronics')
+              )
+            ),
+
+            // Right Column: Articulated Animated Robot Canvas
+            e('div', { className: 'robot-stage' },
+              e('div', { className: 'stage-hud mono' },
+                e('span', null, 'VAJRA-1 // GAIT: DIAGONAL TROT (1.2s PERIOD)'),
+                e('span', { style: { color: 'var(--success-emerald)' } }, '● SLAM: FAST-LIO2 LOCK')
+              ),
+              e(QuadrupedSvgGraphic),
+              e('div', { style: { display: 'flex', justifyContent: 'space-between', marginTop: '12px', fontSize: '0.75rem' } },
+                e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)' } }, 'PAYLOAD: FLIR + 30X PTZ + LIVOX'),
+                e('span', { className: 'mono', style: { color: 'var(--text-muted)' } }, 'GROUND: 400kV BALLAST GRAVEL')
+              )
+            )
+          ),
+
+          // Deep Tech Manifesto
+          e('div', { className: 'manifesto-box' },
+            e('div', null,
+              e('div', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontSize: '0.8rem', fontWeight: 700, marginBottom: '8px' } },
+                'THE DEEP TECH REALITY CHECK'
+              ),
+              e('h2', { style: { fontSize: '1.8rem', marginBottom: '16px', lineHeight: 1.2 } },
+                'Don’t Copy Boston Dynamics. Start Narrow. Earn Your Way Up.'
+              ),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.95rem', lineHeight: 1.6 } },
+                'Boston Dynamics took 30 years, DARPA roots, and hundreds of millions in subsidised research. We don’t build circus tricks. We chose paying Indian industrial customers who risk arc-flash electrocution and toxic exposure every day.'
+              )
+            ),
+            e('div', { style: { display: 'flex', flexDirection: 'column', gap: '16px' } },
+              e('div', { style: { background: 'var(--bg-surface)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-subtle)' } },
+                e('strong', { style: { color: 'var(--hazard-yellow)' } }, 'The Switchyard Gravel Barrier: '),
+                e('span', { style: { color: 'var(--text-secondary)', fontSize: '0.88rem' } },
+                  'Wheeled AMRs get stuck in loose ballast rock, 15cm cable trenches, and staircases. Quadrupeds walk over them effortlessly.'
+                )
+              ),
+              e('div', { style: { background: 'var(--bg-surface)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border-subtle)' } },
+                e('strong', { style: { color: 'var(--electric-cyan)' } }, 'High-EMF Shielded IP: '),
+                e('span', { style: { color: 'var(--text-secondary)', fontSize: '0.88rem' } },
+                  'Switchyards at 765kV emit massive RF radiation that resets standard microcontrollers. Our Faraday enclosure keeps Jetson Orin compute 100% operational.'
+                )
+              )
+            )
+          ),
+
+          // Feature Grid
+          e('div', { className: 'grid-3' },
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'card-icon' }, '🔥'),
+              e('h3', { style: { fontSize: '1.2rem', marginBottom: '8px' } }, 'Automated Thermography'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'Calibrated FLIR Boson core captures radiometric temperatures across all busbars, bushings, and transformers with ±2°C accuracy.'
+              )
+            ),
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'card-icon' }, '👁'),
+              e('h3', { style: { fontSize: '1.2rem', marginBottom: '8px' } }, 'Automated Gauge OCR'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'YOLOv11-based edge vision model reads analog dial needles, SF6 gas levels, and oil reservoir levels with 98.4% precision.'
+              )
+            ),
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'card-icon' }, '⚡'),
+              e('h3', { style: { fontSize: '1.2rem', marginBottom: '8px' } }, 'Partial Discharge Acoustics'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                '64-channel ultrasonic microphone array pinpoints corona discharge and insulator micro-fractures before catastrophic arc flash.'
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // DETAILED ARTICULATED QUADRUPED SVG COMPONENT
+      // ==========================================
+      function QuadrupedSvgGraphic() {
+        return e('svg', {
+          className: 'quadruped-svg',
+          viewBox: '0 0 460 300',
+          fill: 'none',
+          xmlns: 'http://www.w3.org/2000/svg'
+        },
+          // Background Grid & Coordinate Markers
+          e('line', { x1: 20, y1: 270, x2: 440, y2: 270, stroke: 'var(--border-subtle)', strokeWidth: 1 }),
+          // Animated Ground line dashes
+          e('line', {
+            x1: 20, y1: 270, x2: 440, y2: 270,
+            stroke: 'var(--hazard-yellow)',
+            strokeWidth: 2,
+            className: 'anim-ground'
+          }),
+
+          // Scan Cone Sweeping from Turret
+          e('g', { className: 'anim-scan-cone' },
+            e('polygon', {
+              points: '345,95 440,50 440,160',
+              fill: 'url(#scanGradient)',
+              opacity: 0.6
+            })
+          ),
+
+          // Gradients definition
+          e('defs', null,
+            e('linearGradient', { id: 'scanGradient', x1: '345', y1: '95', x2: '440', y2: '105', gradientUnits: 'userSpaceOnUse' },
+              e('stop', { offset: '0%', stopColor: 'var(--hazard-yellow)', stopOpacity: '0.7' }),
+              e('stop', { offset: '100%', stopColor: 'var(--hazard-yellow)', stopOpacity: '0' })
+            ),
+            e('linearGradient', { id: 'bodyGrad', x1: '120', y1: '110', x2: '340', y2: '180', gradientUnits: 'userSpaceOnUse' },
+              e('stop', { offset: '0%', stopColor: '#1e293b' }),
+              e('stop', { offset: '100%', stopColor: '#0f172a' })
+            )
+          ),
+
+          // BACK LEGS (Pair B: Front Right & Rear Left) - Slightly Dimmed for Depth
+          e('g', { style: { opacity: 0.75 } },
+            // Rear Left Leg (Hip at 160, 160)
+            e('g', {
+              className: 'anim-leg-pair-b-thigh',
+              style: { transformOrigin: '160px 160px' }
+            },
+              e('line', { x1: 160, y1: 160, x2: 135, y2: 215, stroke: '#334155', strokeWidth: 10, strokeLinecap: 'round' }),
+              e('circle', { cx: 160, cy: 160, r: 8, fill: '#64748b' }),
+              // Knee Joint & Shank
+              e('g', {
+                className: 'anim-leg-pair-b-shank',
+                style: { transformOrigin: '135px 215px' }
+              },
+                e('line', { x1: 135, y1: 215, x2: 145, y2: 270, stroke: '#1e293b', strokeWidth: 8, strokeLinecap: 'round' }),
+                e('circle', { cx: 135, cy: 215, r: 6, fill: '#475569' }),
+                e('circle', { cx: 145, cy: 270, r: 5, fill: '#f59e0b' })
+              )
+            ),
+
+            // Front Right Leg (Hip at 300, 160)
+            e('g', {
+              className: 'anim-leg-pair-b-thigh',
+              style: { transformOrigin: '300px 160px' }
+            },
+              e('line', { x1: 300, y1: 160, x2: 325, y2: 215, stroke: '#334155', strokeWidth: 10, strokeLinecap: 'round' }),
+              e('circle', { cx: 300, cy: 160, r: 8, fill: '#64748b' }),
+              // Knee Joint & Shank
+              e('g', {
+                className: 'anim-leg-pair-b-shank',
+                style: { transformOrigin: '325px 215px' }
+              },
+                e('line', { x1: 325, y1: 215, x2: 335, y2: 270, stroke: '#1e293b', strokeWidth: 8, strokeLinecap: 'round' }),
+                e('circle', { cx: 325, cy: 215, r: 6, fill: '#475569' }),
+                e('circle', { cx: 335, cy: 270, r: 5, fill: '#f59e0b' })
+              )
+            )
+          ),
+
+          // ROBOT TORSO & PAYLOAD (With Vertical Bobbing Animation)
+          e('g', { className: 'anim-body' },
+            // Antenna at rear
+            e('g', { className: 'anim-antenna' },
+              e('line', { x1: 125, y1: 95, x2: 105, y2: 35, stroke: '#94a3b8', strokeWidth: 2 }),
+              e('circle', { cx: 105, cy: 35, r: 3, fill: 'var(--hazard-yellow)' })
+            ),
+
+            // Main Body Chassis
+            e('rect', {
+              x: 130, y: 110, width: 200, height: 60, rx: 14,
+              fill: 'url(#bodyGrad)',
+              stroke: '#334155',
+              strokeWidth: 2
+            }),
+
+            // Hazard Chevron Decal on Body
+            e('path', {
+              d: 'M170 125 L180 140 L170 155 M190 125 L200 140 L190 155 M210 125 L220 140 L210 155',
+              stroke: 'var(--hazard-yellow)',
+              strokeWidth: 3,
+              strokeLinecap: 'round',
+              strokeLinejoin: 'round'
+            }),
+
+            // Status OLED Screen
+            e('rect', { x: 235, y: 125, width: 55, height: 26, rx: 4, fill: '#030712', stroke: 'var(--electric-cyan)', strokeWidth: 1 }),
+            e('text', { x: 242, y: 142, fill: 'var(--electric-cyan)', fontSize: '8', fontFamily: 'monospace', fontWeight: 'bold' }, 'EMF OK'),
+
+            // Dorsal Sensor Turret Base
+            e('rect', { x: 250, y: 88, width: 70, height: 24, rx: 6, fill: '#1e293b', stroke: '#475569', strokeWidth: 1.5 }),
+
+            // Rotating LiDAR Head
+            e('g', { className: 'anim-lidar-spin' },
+              e('circle', { cx: 240, cy: 85, r: 12, fill: '#0f172a', stroke: 'var(--electric-cyan)', strokeWidth: 2 }),
+              e('line', { x1: 240, y1: 85, x2: 252, y2: 85, stroke: 'var(--hazard-yellow)', strokeWidth: 2 })
+            ),
+
+            // Thermal + Optical Camera Housing
+            e('rect', { x: 310, y: 85, width: 35, height: 28, rx: 6, fill: '#0f172a', stroke: 'var(--hazard-yellow)', strokeWidth: 2 }),
+            e('circle', { cx: 326, cy: 99, r: 7, fill: '#ef4444' }),
+            e('circle', { cx: 326, cy: 99, r: 3, fill: '#fee2e2' }),
+
+            // Heartbeat & Hazard Beacon LEDs
+            e('circle', { cx: 145, cy: 118, r: 3, fill: 'var(--success-emerald)' }),
+            e('circle', { cx: 280, cy: 88, r: 3, fill: 'var(--hazard-yellow)' })
+          ),
+
+          // FOREGROUND LEGS (Pair A: Front Left & Rear Right)
+          e('g', null,
+            // Rear Right Leg (Hip at 160, 160)
+            e('g', {
+              className: 'anim-leg-pair-a-thigh',
+              style: { transformOrigin: '160px 160px' }
+            },
+              e('line', { x1: 160, y1: 160, x2: 135, y2: 215, stroke: '#64748b', strokeWidth: 11, strokeLinecap: 'round' }),
+              e('circle', { cx: 160, cy: 160, r: 9, fill: 'var(--hazard-yellow)' }),
+              // Knee Joint & Shank
+              e('g', {
+                className: 'anim-leg-pair-a-shank',
+                style: { transformOrigin: '135px 215px' }
+              },
+                e('line', { x1: 135, y1: 215, x2: 145, y2: 270, stroke: '#334155', strokeWidth: 9, strokeLinecap: 'round' }),
+                e('circle', { cx: 135, cy: 215, r: 7, fill: '#94a3b8' }),
+                e('circle', { cx: 145, cy: 270, r: 6, fill: '#000', stroke: 'var(--hazard-yellow)', strokeWidth: 2 })
+              )
+            ),
+
+            // Front Left Leg (Hip at 300, 160)
+            e('g', {
+              className: 'anim-leg-pair-a-thigh',
+              style: { transformOrigin: '300px 160px' }
+            },
+              e('line', { x1: 300, y1: 160, x2: 325, y2: 215, stroke: '#64748b', strokeWidth: 11, strokeLinecap: 'round' }),
+              e('circle', { cx: 300, cy: 160, r: 9, fill: 'var(--hazard-yellow)' }),
+              // Knee Joint & Shank
+              e('g', {
+                className: 'anim-leg-pair-a-shank',
+                style: { transformOrigin: '325px 215px' }
+              },
+                e('line', { x1: 325, y1: 215, x2: 335, y2: 270, stroke: '#334155', strokeWidth: 9, strokeLinecap: 'round' }),
+                e('circle', { cx: 325, cy: 215, r: 7, fill: '#94a3b8' }),
+                e('circle', { cx: 335, cy: 270, r: 6, fill: '#000', stroke: 'var(--hazard-yellow)', strokeWidth: 2 })
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // VIEW 2: INSPECTOR (Live Mission Control)
+      // ==========================================
+      function InspectorView(props) {
+        const [mode, setMode] = useState('thermal'); // 'thermal' | 'optical' | 'lidar' | 'acoustic'
+        const [targetAsset, setTargetAsset] = useState('400kV Transformer T-02 Bushing B');
+        const [workOrderSent, setWorkOrderSent] = useState(false);
+
+        function handleSendWorkOrder() {
+          setWorkOrderSent(true);
+          setTimeout(function() {
+            alert("✓ SAP Plant Maintenance Dispatched!\n\nNotification: #NOTIF-8921-EHV\nWork Order: #WO-400KV-091\nPriority: 1 (Urgent Hotspot Escalation)\nRecipients: Substation In-Charge & Shift Engineer");
+          }, 100);
+        }
+
+        return e('div', null,
+          e('div', { style: { marginBottom: '24px' } },
+            e('h1', { style: { fontSize: '2rem', fontWeight: 800 } }, 'Vajra-1 Autonomous Mission Control'),
+            e('p', { style: { color: 'var(--text-secondary)' } },
+              'Real-time edge telemetry streaming from 400kV GIS/AIS switchyard over encrypted private 5G mesh.'
+            )
+          ),
+
+          e('div', { className: 'console-wrapper' },
+            // Console Toolbar
+            e('div', { className: 'console-header' },
+              e('div', { style: { display: 'flex', alignItems: 'center', gap: '16px' } },
+                e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } },
+                  'ASSET: ' + targetAsset
+                ),
+                e('span', { className: 'mono', style: { fontSize: '0.8rem', color: 'var(--text-muted)' } },
+                  'MISSION #142 (AUTONOMOUS)'
+                )
+              ),
+              e('div', { style: { display: 'flex', gap: '8px' } },
+                e('button', {
+                  className: 'btn ' + (mode === 'thermal' ? 'btn-primary' : 'btn-outline'),
+                  style: { padding: '6px 12px', fontSize: '0.8rem' },
+                  onClick: function() { setMode('thermal'); }
+                }, 'Radiometric FLIR'),
+                e('button', {
+                  className: 'btn ' + (mode === 'optical' ? 'btn-primary' : 'btn-outline'),
+                  style: { padding: '6px 12px', fontSize: '0.8rem' },
+                  onClick: function() { setMode('optical'); }
+                }, '30x Optical PTZ'),
+                e('button', {
+                  className: 'btn ' + (mode === 'lidar' ? 'btn-primary' : 'btn-outline'),
+                  style: { padding: '6px 12px', fontSize: '0.8rem' },
+                  onClick: function() { setMode('lidar'); }
+                }, '3D LiDAR Point Cloud'),
+                e('button', {
+                  className: 'btn ' + (mode === 'acoustic' ? 'btn-primary' : 'btn-outline'),
+                  style: { padding: '6px 12px', fontSize: '0.8rem' },
+                  onClick: function() { setMode('acoustic'); }
+                }, 'Acoustic Ultrasound')
+              )
+            ),
+
+            // Console Viewport Area
+            e('div', { className: 'console-body' },
+              e('div', { className: 'viewport-canvas' },
+                e(SwitchyardIllustration, { mode: mode })
+              ),
+
+              // Sidebar Analytics
+              e('div', { className: 'viewport-sidebar' },
+                e('div', null,
+                  e('div', {
+                    style: {
+                      background: 'var(--alert-glow)',
+                      border: '1px solid var(--alert-crimson)',
+                      borderRadius: '8px',
+                      padding: '16px',
+                      marginBottom: '20px'
+                    }
+                  },
+                    e('div', { style: { color: 'var(--alert-crimson)', fontWeight: 800, fontSize: '0.85rem', marginBottom: '4px' } },
+                      '🔥 CRITICAL THERMAL RUNAWAY RISK'
+                    ),
+                    e('p', { style: { fontSize: '0.8rem', color: 'var(--text-secondary)' } },
+                      'Phase B isolator bushing measured at +88.4°C (+46.3°C above ambient baseline). Probable loose terminal connector clamp.'
+                    )
+                  ),
+
+                  e('div', { style: { display: 'flex', flexDirection: 'column', gap: '10px' } },
+                    e('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' } },
+                      e('span', { style: { color: 'var(--text-secondary)' } }, 'Peak Hotspot:'),
+                      e('span', { className: 'mono', style: { color: 'var(--alert-crimson)', fontWeight: 700 } }, '88.4 °C')
+                    ),
+                    e('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' } },
+                      e('span', { style: { color: 'var(--text-secondary)' } }, 'SF6 Pressure Gauge:'),
+                      e('span', { className: 'mono', style: { color: 'var(--success-emerald)', fontWeight: 700 } }, '0.62 MPa (OCR 99%)')
+                    ),
+                    e('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' } },
+                      e('span', { style: { color: 'var(--text-secondary)' } }, 'Acoustic Corona Ping:'),
+                      e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } }, '38.2 kHz (WARNING)')
+                    ),
+                    e('div', { style: { display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' } },
+                      e('span', { style: { color: 'var(--text-secondary)' } }, 'Ground Vibration:'),
+                      e('span', { className: 'mono' }, '0.04 g (NOMINAL)')
+                    )
+                  )
+                ),
+
+                e('div', { style: { marginTop: '24px' } },
+                  e('button', {
+                    className: 'btn btn-primary',
+                    style: { width: '100%', fontSize: '0.85rem' },
+                    onClick: handleSendWorkOrder,
+                    disabled: workOrderSent
+                  }, workOrderSent ? '✓ SAP Work Order Dispatched' : 'Generate Emergency SAP Order')
+                )
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // SWITCHYARD THERMAL & SENSOR ILLUSTRATION
+      // ==========================================
+      function SwitchyardIllustration(props) {
+        const mode = props.mode;
+
+        return e('svg', {
+          viewBox: '0 0 600 380',
+          style: { width: '100%', height: '100%', maxHeight: '420px' }
+        },
+          // Background ambient sky / environment
+          e('rect', { width: 600, height: 380, fill: mode === 'thermal' ? '#030712' : '#090d16' }),
+
+          // Switchyard Structure Lines
+          e('g', { stroke: '#334155', strokeWidth: 1.5 },
+            // Tower 1
+            e('line', { x1: 80, y1: 340, x2: 120, y2: 60 }),
+            e('line', { x1: 160, y1: 340, x2: 120, y2: 60 }),
+            e('line', { x1: 90, y1: 220, x2: 150, y2: 220 }),
+            e('line', { x1: 95, y1: 140, x2: 145, y2: 140 }),
+
+            // Busbar Horizontal Cables
+            e('line', { x1: 120, y1: 90, x2: 480, y2: 90, stroke: 'var(--hazard-yellow)', strokeWidth: 3 }),
+            e('line', { x1: 120, y1: 110, x2: 480, y2: 110, stroke: 'var(--electric-cyan)', strokeWidth: 2 }),
+
+            // Tower 2
+            e('line', { x1: 440, y1: 340, x2: 480, y2: 60 }),
+            e('line', { x1: 520, y1: 340, x2: 480, y2: 60 }),
+            e('line', { x1: 450, y1: 220, x2: 510, y2: 220 })
+          ),
+
+          // High Voltage Ceramic Bushings
+          e('g', null,
+            e('rect', { x: 260, y: 140, width: 80, height: 160, rx: 6, fill: '#1e293b', stroke: '#475569', strokeWidth: 2 }),
+            e('text', { x: 275, y: 220, fill: '#94a3b8', fontSize: '10', fontFamily: 'monospace' }, 'TR-02'),
+
+            // Bushing Phase A, B, C
+            e('ellipse', { cx: 280, cy: 130, rx: 10, ry: 20, fill: '#334155' }),
+            e('ellipse', { cx: 300, cy: 125, rx: 12, ry: 24, fill: '#475569' }),
+            e('ellipse', { cx: 320, cy: 130, rx: 10, ry: 20, fill: '#334155' })
+          ),
+
+          // THERMAL MODE OVERLAYS
+          mode === 'thermal' && e('g', null,
+            e('radialGradient', { id: 'thermalHotspot', cx: '50%', cy: '50%', r: '50%' },
+              e('stop', { offset: '0%', stopColor: '#ef4444', stopOpacity: '0.95' }),
+              e('stop', { offset: '40%', stopColor: '#f59e0b', stopOpacity: '0.8' }),
+              e('stop', { offset: '70%', stopColor: '#3b82f6', stopOpacity: '0.4' }),
+              e('stop', { offset: '100%', stopColor: '#1e1b4b', stopOpacity: '0' })
+            ),
+            e('circle', { cx: 300, cy: 115, r: 55, fill: 'url(#thermalHotspot)' }),
+            // Reticle Target
+            e('circle', { cx: 300, cy: 115, r: 24, fill: 'none', stroke: '#ef4444', strokeWidth: 1.5, strokeDasharray: '4 4' }),
+            e('line', { x1: 300, y1: 85, x2: 300, y2: 145, stroke: '#ef4444', strokeWidth: 1 }),
+            e('line', { x1: 270, y1: 115, x2: 330, y2: 115, stroke: '#ef4444', strokeWidth: 1 }),
+            e('rect', { x: 340, y: 95, width: 120, height: 40, rx: 4, fill: 'rgba(0,0,0,0.85)', stroke: '#ef4444', strokeWidth: 1 }),
+            e('text', { x: 348, y: 112, fill: '#ef4444', fontSize: '11', fontFamily: 'monospace', fontWeight: 'bold' }, 'HOTSPOT: 88.4°C'),
+            e('text', { x: 348, y: 127, fill: '#cbd5e1', fontSize: '9', fontFamily: 'monospace' }, 'DELTA: +46.3°C')
+          ),
+
+          // ACOUSTIC ULTRASOUND OVERLAYS
+          mode === 'acoustic' && e('g', null,
+            e('circle', { cx: 300, cy: 115, r: 35, fill: 'none', stroke: 'var(--electric-cyan)', strokeWidth: 2, opacity: 0.8 }),
+            e('circle', { cx: 300, cy: 115, r: 65, fill: 'none', stroke: 'var(--electric-cyan)', strokeWidth: 1.5, strokeDasharray: '6 6', opacity: 0.6 }),
+            e('circle', { cx: 300, cy: 115, r: 95, fill: 'none', stroke: 'var(--electric-cyan)', strokeWidth: 1, strokeDasharray: '3 3', opacity: 0.4 }),
+            e('text', { x: 340, y: 112, fill: 'var(--electric-cyan)', fontSize: '11', fontFamily: 'monospace', fontWeight: 'bold' }, 'CORONA: 38.2 kHz')
+          ),
+
+          // LIDAR MODE OVERLAYS
+          mode === 'lidar' && e('g', null,
+            e('circle', { cx: 200, cy: 180, r: 2, fill: 'var(--electric-cyan)' }),
+            e('circle', { cx: 220, cy: 190, r: 2, fill: 'var(--electric-cyan)' }),
+            e('circle', { cx: 240, cy: 170, r: 2, fill: 'var(--electric-cyan)' }),
+            e('circle', { cx: 280, cy: 140, r: 2, fill: 'var(--electric-cyan)' }),
+            e('circle', { cx: 320, cy: 140, r: 2, fill: 'var(--electric-cyan)' }),
+            e('circle', { cx: 340, cy: 160, r: 2, fill: 'var(--electric-cyan)' }),
+            e('text', { x: 20, y: 40, fill: 'var(--electric-cyan)', fontSize: '11', fontFamily: 'monospace' }, 'FAST-LIO2: 48,000 PTS/SEC [LOCKED]')
+          )
+        );
+      }
+
+      // ==========================================
+      // VIEW 3: DYN (Mechatronics & Gait Engineering)
+      // ==========================================
+      function DynView(props) {
+        const [trotFreq, setTrotFreq] = useState(1.2);
+        const [stepHeight, setStepHeight] = useState(12);
+
+        return e('div', null,
+          e('div', { style: { marginBottom: '32px' } },
+            e('span', { className: 'brand-tag', style: { marginLeft: 0 } }, 'PHYSICS & MECHATRONICS'),
+            e('h1', { style: { fontSize: '2.2rem', fontWeight: 800, marginTop: '8px' } },
+              'High-Torque QDD Actuation & 765kV High-EMF Hardening'
+            ),
+            e('p', { style: { color: 'var(--text-secondary)' } },
+              'How Unexpected Dynamics solves the two fatal bottlenecks of Indian industrial robotics: terrain ballast compliance and extreme RF field interference.'
+            )
+          ),
+
+          e('div', { className: 'grid-3', style: { marginBottom: '40px' } },
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontSize: '0.8rem', fontWeight: 700 } }, 'ACTUATOR SPEC'),
+              e('h3', { style: { fontSize: '1.4rem', margin: '8px 0' } }, '12x High-Torque QDD BLDC'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'Quasi-Direct-Drive 6:1 planetary gearboxes with 45 Nm peak torque per joint. High back-drivability absorbs heavy shock impacts on jagged switchyard gravel without stripping gear teeth.'
+              )
+            ),
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'mono', style: { color: 'var(--electric-cyan)', fontSize: '0.8rem', fontWeight: 700 } }, 'EMF ISOLATION'),
+              e('h3', { style: { fontSize: '1.4rem', margin: '8px 0' } }, '765kV EHV Faraday Cage'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'Solid aluminum chassis walls with conductive gasket seals, ferrite-choked CAN buses, and braided copper ground drag-chains to dissipate electrostatic lightning buildup.'
+              )
+            ),
+            e('div', { className: 'feature-card' },
+              e('div', { className: 'mono', style: { color: 'var(--success-emerald)', fontSize: '0.8rem', fontWeight: 700 } }, 'THERMAL ENDURANCE'),
+              e('h3', { style: { fontSize: '1.4rem', margin: '8px 0' } }, '50°C Ambient Rated'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'Vapor-chamber heat pipes route Jetson Orin AGX thermal dissipation directly to the quadruped chassis belly, operating reliably through scorching North Indian summers.'
+              )
+            )
+          ),
+
+          // Interactive Gait Tuning Console
+          e('div', { className: 'manifesto-box' },
+            e('div', null,
+              e('h3', { style: { fontSize: '1.4rem', marginBottom: '16px' } }, 'Dynamic Gait Tuning'),
+              e('div', { style: { marginBottom: '20px' } },
+                e('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
+                  e('span', null, 'Trot Frequency:'),
+                  e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } }, trotFreq + ' Hz')
+                ),
+                e('input', {
+                  type: 'range',
+                  min: '0.6', max: '2.2', step: '0.1',
+                  value: trotFreq,
+                  style: { width: '100%' },
+                  onChange: function(ev) { setTrotFreq(parseFloat(ev.target.value)); }
+                })
+              ),
+              e('div', null,
+                e('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
+                  e('span', null, 'Step Obstacle Clearance:'),
+                  e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } }, stepHeight + ' cm')
+                ),
+                e('input', {
+                  type: 'range',
+                  min: '5', max: '22', step: '1',
+                  value: stepHeight,
+                  style: { width: '100%' },
+                  onChange: function(ev) { setStepHeight(parseInt(ev.target.value)); }
+                })
+              )
+            ),
+            e('div', { style: { background: 'var(--bg-surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border-subtle)' } },
+              e('div', { className: 'mono', style: { fontSize: '0.8rem', color: 'var(--text-muted)' } }, 'KINEMATIC SOLVER STATUS:'),
+              e('div', { style: { marginTop: '12px', display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' } },
+                e('div', null, '• Stance Foot Stability: ', e('strong', { style: { color: 'var(--success-emerald)' } }, '100% Zero-Slip')),
+                e('div', null, '• Cable Trench Clearance: ', e('strong', null, (stepHeight >= 15 ? 'CLEAR (>=15cm)' : 'CAUTION (<15cm)'))),
+                e('div', null, '• Power Consumption: ', e('strong', { className: 'mono' }, (180 + trotFreq * 90).toFixed(0) + ' W'))
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // VIEW 4: PIPELINE (Enterprise Architecture)
+      // ==========================================
+      function PipelineView(props) {
+        return e('div', null,
+          e('div', { style: { marginBottom: '32px' } },
+            e('span', { className: 'brand-tag', style: { marginLeft: 0 } }, 'EDGE TO ENTERPRISE ARCHITECTURE'),
+            e('h1', { style: { fontSize: '2.2rem', fontWeight: 800, marginTop: '8px' } },
+              'The Automated Defect Intelligence Pipeline'
+            ),
+            e('p', { style: { color: 'var(--text-secondary)' } },
+              'From raw sensor capture to enterprise SAP PM and SCADA alerts with zero human transcription errors.'
+            )
+          ),
+
+          e('div', { className: 'pipeline-grid' },
+            // Stage 1
+            e('div', { className: 'pipeline-node active-stage' },
+              e('div', null,
+                e('div', { className: 'radar-icon-box' },
+                  e('div', { className: 'radar-sweep-arm' }),
+                  e('span', { style: { color: 'var(--electric-cyan)', fontSize: '1rem' } }, '◎')
+                ),
+                e('div', { className: 'pipeline-number mono' }, 'STAGE 01 // SENSORY CAPTURE'),
+                e('h3', { style: { fontSize: '1.15rem', marginBottom: '8px' } }, 'Synchronized Edge Acquisition'),
+                e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.85rem' } },
+                  'FLIR Boson radiometric thermography, Livox Mid-360 LiDAR SLAM point clouds, and 64-channel ultrasonic audio captured synchronously.'
+                )
+              ),
+              e('div', { className: 'mono', style: { fontSize: '0.75rem', color: 'var(--hazard-yellow)', marginTop: '16px' } },
+                'Rate: 30 FPS / 100k pts/sec'
+              )
+            ),
+
+            // Stage 2
+            e('div', { className: 'pipeline-node' },
+              e('div', null,
+                e('div', { className: 'radar-icon-box', style: { borderColor: 'var(--hazard-yellow)' } },
+                  e('span', { style: { color: 'var(--hazard-yellow)' } }, '⚡')
+                ),
+                e('div', { className: 'pipeline-number mono' }, 'STAGE 02 // HARDENED COMPUTE'),
+                e('h3', { style: { fontSize: '1.15rem', marginBottom: '8px' } }, 'NVIDIA Jetson Orin AGX'),
+                e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.85rem' } },
+                  '275 TOPS of edge AI acceleration running inside the 765kV Faraday enclosure. Runs ROS 2 Humble nodes and TensorRT models.'
+                )
+              ),
+              e('div', { className: 'mono', style: { fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '16px' } },
+                'Latency: 28ms TensorRT'
+              )
+            ),
+
+            // Stage 3
+            e('div', { className: 'pipeline-node' },
+              e('div', null,
+                e('div', { className: 'radar-icon-box', style: { borderColor: 'var(--alert-crimson)' } },
+                  e('span', { style: { color: 'var(--alert-crimson)' } }, '🔥')
+                ),
+                e('div', { className: 'pipeline-number mono' }, 'STAGE 03 // ANOMALY INFERENCE'),
+                e('h3', { style: { fontSize: '1.15rem', marginBottom: '8px' } }, 'Defect Classification'),
+                e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.85rem' } },
+                  'YOLOv11 needle OCR reads oil and SF6 gauges; radiometric segmentation flags hotspot deltas exceeding Indian Grid Standards.'
+                )
+              ),
+              e('div', { className: 'mono', style: { fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '16px' } },
+                'Confidence: >98.4%'
+              )
+            ),
+
+            // Stage 4
+            e('div', { className: 'pipeline-node' },
+              e('div', null,
+                e('div', { className: 'radar-icon-box', style: { borderColor: 'var(--success-emerald)' } },
+                  e('span', { style: { color: 'var(--success-emerald)' } }, '✓')
+                ),
+                e('div', { className: 'pipeline-number mono' }, 'STAGE 04 // ENTERPRISE HANDSHAKE'),
+                e('h3', { style: { fontSize: '1.15rem', marginBottom: '8px' } }, 'SAP PM & SCADA Dispatch'),
+                e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.85rem' } },
+                  'Instantly triggers maintenance work orders in SAP S/4HANA or IBM Maximo with exact GPS coordinates and thermal evidence attachments.'
+                )
+              ),
+              e('div', { className: 'mono', style: { fontSize: '0.75rem', color: 'var(--success-emerald)', marginTop: '16px' } },
+                'API: REST / MQTT / Modbus'
+              )
+            )
+          )
+        );
+      }
+
+      // ==========================================
+      // VIEW 5: RAAS & PILOTS (Commercial & Calculator)
+      // ==========================================
+      function RaasView(props) {
+        const [sites, setSites] = useState(4);
+        const [annualCost, setAnnualCost] = useState(45); // in Lakhs
+        const [submitted, setSubmitted] = useState(false);
+
+        const traditionalTotal = sites * annualCost;
+        const raasAnnualTotal = sites * 21.6; // 1.8L/mo * 12
+        const netSavings = Math.max(0, traditionalTotal - raasAnnualTotal);
+
+        function handleSubmit(e) {
+          e.preventDefault();
+          setSubmitted(true);
+          setTimeout(function() {
+            alert("✓ Pilot Application Received! Our technical team will reach out within 24 hours to schedule the 400kV substation site assessment.");
+          }, 100);
+        }
+
+        return e('div', null,
+          e('div', { style: { marginBottom: '32px' } },
+            e('span', { className: 'brand-tag', style: { marginLeft: 0 } }, 'COMMERCIAL VIABILITY'),
+            e('h1', { style: { fontSize: '2.2rem', fontWeight: 800, marginTop: '8px' } },
+              'Robotics-as-a-Service (RaaS) Unit Economics'
+            ),
+            e('p', { style: { color: 'var(--text-secondary)' } },
+              'Why CapEx fails in India and how our OpEx model unlocks rapid enterprise adoption across state and private utilities.'
+            )
+          ),
+
+          // ROI Calculator Box
+          e('div', { className: 'manifesto-box', style: { marginBottom: '60px' } },
+            e('div', null,
+              e('h3', { style: { fontSize: '1.3rem', marginBottom: '24px' } }, 'Calculate Your Plant Savings'),
+              e('div', { style: { marginBottom: '24px' } },
+                e('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
+                  e('span', null, 'Number of Substations / Refineries:'),
+                  e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } }, sites + ' Sites')
+                ),
+                e('input', {
+                  type: 'range',
+                  min: '1', max: '15',
+                  value: sites,
+                  style: { width: '100%' },
+                  onChange: function(ev) { setSites(parseInt(ev.target.value)); }
+                })
+              ),
+              e('div', null,
+                e('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '8px' } },
+                  e('span', null, 'Current Annual Outage & Inspection Cost / Site:'),
+                  e('span', { className: 'mono', style: { color: 'var(--hazard-yellow)', fontWeight: 700 } }, '₹' + annualCost + ' Lakhs')
+                ),
+                e('input', {
+                  type: 'range',
+                  min: '20', max: '90', step: '5',
+                  value: annualCost,
+                  style: { width: '100%' },
+                  onChange: function(ev) { setAnnualCost(parseInt(ev.target.value)); }
+                })
+              )
+            ),
+
+            e('div', { style: { background: 'var(--bg-surface)', padding: '28px', borderRadius: '12px', border: '1px solid var(--border-subtle)' } },
+              e('div', { className: 'mono', style: { fontSize: '0.8rem', color: 'var(--text-muted)' } }, 'ESTIMATED ANNUAL ROI:'),
+              e('div', { className: 'mono', style: { fontSize: '2.5rem', fontWeight: 800, color: 'var(--hazard-yellow)', margin: '8px 0' } },
+                '₹' + (netSavings >= 100 ? (netSavings / 100).toFixed(2) + ' Cr' : netSavings.toFixed(1) + ' Lakhs')
+              ),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '16px' } },
+                'Net annual savings compared to manual walkdowns, unexpected arc flash trips, and third-party thermography contractors.'
+              ),
+              e('div', { style: { borderTop: '1px solid var(--border-subtle)', paddingTop: '12px', fontSize: '0.85rem' } },
+                e('div', { style: { display: 'flex', justifyContent: 'space-between', marginBottom: '6px' } },
+                  e('span', { style: { color: 'var(--text-muted)' } }, 'Fixed RaaS Subscription:'),
+                  e('span', { className: 'mono', style: { fontWeight: 700 } }, '₹1.80L / month / site')
+                ),
+                e('div', { style: { display: 'flex', justifyContent: 'space-between' } },
+                  e('span', { style: { color: 'var(--text-muted)' } }, 'Hardware CapEx:'),
+                  e('span', { className: 'mono', style: { color: 'var(--success-emerald)', fontWeight: 700 } }, '₹0 (Zero Upfront)')
+                )
+              )
+            )
+          ),
+
+          // Pilot Booking Form
+          e('div', { className: 'form-box' },
+            e('div', { style: { textAlign: 'center', marginBottom: '28px' } },
+              e('h2', { style: { fontSize: '1.6rem', marginBottom: '8px' } }, 'Book a 30-Day Substation Trial'),
+              e('p', { style: { color: 'var(--text-secondary)', fontSize: '0.9rem' } },
+                'Deploy Vajra-1 at your high-voltage switchyard or petrochemical facility with full engineer onboarding.'
+              )
+            ),
+
+            e('form', { onSubmit: handleSubmit },
+              e('div', { className: 'form-group' },
+                e('label', { className: 'form-label' }, 'Full Name'),
+                e('input', { className: 'form-control', placeholder: 'e.g. Vikramaditya Sharma', required: true })
+              ),
+              e('div', { className: 'form-group' },
+                e('label', { className: 'form-label' }, 'Utility / Enterprise Organization'),
+                e('input', { className: 'form-control', placeholder: 'e.g. Power Grid Corp / Tata Power / IOCL', required: true })
+              ),
+              e('div', { className: 'form-group' },
+                e('label', { className: 'form-label' }, 'Work Email'),
+                e('input', { type: 'email', className: 'form-control', placeholder: 'v.sharma@powercorp.in', required: true })
+              ),
+              e('div', { className: 'form-group' },
+                e('label', { className: 'form-label' }, 'Facility Type & Voltage'),
+                e('select', { className: 'form-control', required: true },
+                  e('option', { value: '' }, 'Select classification...'),
+                  e('option', { value: '765kv' }, '765kV / 400kV Ultra High-Voltage AIS/GIS'),
+                  e('option', { value: '220kv' }, '220kV / 132kV Transmission Substation'),
+                  e('option', { value: 'refinery' }, 'Petrochemical Refinery / Tank Storage Farm'),
+                  e('option', { value: 'heavy' }, 'Steel Smelting / Heavy Industrial Facility')
+                )
+              ),
+              e('button', {
+                type: 'submit',
+                className: 'btn btn-primary',
+                style: { width: '100%', padding: '14px', fontSize: '1rem', marginTop: '12px' },
+                disabled: submitted
+              }, submitted ? '✓ Pilot Application Submitted' : 'Submit 30-Day Pilot Application')
+            )
+          )
+        );
+      }
+
+      // Render React App to DOM
+      ReactDOM.render(e(App), document.getElementById('root'));
+    })();
+  </script>
+</body>
+</html>
