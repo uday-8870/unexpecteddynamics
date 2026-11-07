@@ -5,21 +5,24 @@ import Raw from './components/Raw';
 import Btn from './components/Btn';
 import Reveal from './components/Reveal';
 import Timeline from './components/Timeline';
-import { markSvg, QUAD_SVG, YARD_SVG, DYN_SVG, ICON } from './svg';
+import DynInteractive from './components/DynInteractive';
+import QuadrupedInteractive from './components/QuadrupedInteractive';
+import RobotConfigurator from './components/RobotConfigurator';
+import { markSvg, YARD_SVG, ICON } from './svg';
 import { useRoute, useTheme } from './hooks';
 import { Eyebrow, Band, Head, IconCard, Cta, PageHead, Pipeline } from './components/Parts';
 
 const ROUTES = [
   ['home', 'Home'],
-  ['inspector', 'Inspector'],
-  ['dyn', 'Dyn'],
+  ['dyn', 'Everyday Robots'],
+  ['inspector', 'Industrial Inspector'],
   ['platform', 'Platform'],
   ['company', 'Company'],
   ['contact', 'Contact']
 ];
 
 // ==========================================
-// VIEW 1: HOME
+// VIEW 1: HOME (Everyday Purpose & Vision)
 // ==========================================
 function HomeView() {
   return (
@@ -28,121 +31,152 @@ function HomeView() {
         <div className="hero-grid">
           <div className="hero-copy">
             <Reveal y={20} delay={0.05}>
-              <Eyebrow>Robotics · Visakhapatnam, India</Eyebrow>
+              <Eyebrow tone="t">Practical Robotics · Visakhapatnam, India</Eyebrow>
             </Reveal>
             <Reveal y={30} delay={0.15}>
-              <h1>Legged robots for work that cannot wait.</h1>
+              <h1>Robots for everyday purpose. Hardworking by design.</h1>
             </Reveal>
             <Reveal y={30} delay={0.25}>
               <p className="lede">
-                Unexpected Dynamics builds inspection robots for 220kV–765kV high-voltage switchyards, refineries, and heavy coastal plants in Visakhapatnam and across India, alongside an approachable robotics line for makers and classrooms.
+                Our primary mission is not building expensive circus tricks or complex humanoids. We engineer dependable, approachable robotics for everyday human purposes — helping in workshops, carrying goods, assisting in clinics, and handling dangerous high-voltage rounds where humans shouldn't walk.
               </p>
             </Reveal>
             <Reveal y={20} delay={0.35}>
               <div className="btns">
-                <Btn to="inspector" kind="primary">Explore Inspector</Btn>
-                <Btn to="dyn">Meet Dyn</Btn>
+                <Btn to="dyn" kind="primary">Explore Everyday Robots</Btn>
+                <Btn to="inspector">See Industrial Line</Btn>
               </div>
             </Reveal>
           </div>
           <Reveal y={40} delay={0.2} scale={0.96}>
-            <figure className="visual">
-              <Raw html={QUAD_SVG} className="art" label="Animated Inspector quadruped robot walking while sensor head scans" />
-              <figcaption>Inspector on patrol. Autonomous 400kV substation round.</figcaption>
-            </figure>
+            <DynInteractive />
           </Reveal>
         </div>
       </Band>
 
-      {/* Two Product Lines */}
+      {/* The Two Lines: Everyday and Hazardous */}
       <Band>
         <Head
-          eyebrow="Two product lines"
-          title="Start where you are."
-          sub="One company, two ways in. Inspector takes people out of dangerous high-voltage rounds. Dyn puts a capable first robot in more hands."
+          eyebrow="Two purposeful platforms"
+          title="From daily chores to extreme hazards."
+          sub="One core autonomy stack powers two distinct lines: friendly helper robots for everyday life, and ruggedized specialists for hazardous industrial sites."
         />
         <div className="two">
           <Reveal delay={0.1} y={30}>
             <div className="card line">
-              <div className="art">
-                <Raw html={YARD_SVG} label="Illustration of a switchyard with a thermal hotspot being flagged" />
-              </div>
-              <div className="cbody">
-                <Eyebrow>Industrial</Eyebrow>
-                <h3>Inspector</h3>
+              <div className="cbody" style={{ padding: '32px' }}>
+                <Eyebrow tone="t">Everyday Helper Line</Eyebrow>
+                <h3>Dyn — The Everyday Purpose Robot</h3>
                 <p>
-                  Legged inspection robots for substations, coastal refineries, and heavy steel plants. Thermal, optical, and acoustic sensing, edge autonomy that navigates GPS-denied switchyards, and automated work orders for SAP and Maximo.
+                  Built for workshops, retail stores, libraries, clinics, and classrooms. Carries up to 15 kg of tools or medicines, welcomes guests, navigates indoor clutter safely, and costs less than a second-hand scooter. Simple to program, safe to stand beside.
                 </p>
-                <Btn to="inspector" kind="link">See Inspector</Btn>
+                <Btn to="dyn" kind="link">Meet Dyn & Everyday Tasks</Btn>
               </div>
             </div>
           </Reveal>
 
           <Reveal delay={0.2} y={30}>
             <div className="card line">
-              <div className="art">
-                <Raw html={DYN_SVG} className="small" label="Animated illustration of Dyn, a small friendly wheeled robot waving" />
-              </div>
-              <div className="cbody">
-                <Eyebrow tone="t">Entry level</Eyebrow>
-                <h3>Dyn</h3>
+              <div className="cbody" style={{ padding: '32px' }}>
+                <Eyebrow>Extreme Environment Line</Eyebrow>
+                <h3>Inspector — The Hazardous Terrain Specialist</h3>
                 <p>
-                  An approachable robot line for classrooms, robotics clubs, makers, and workshops. Simple to start with, open to build on, and designed around the same perception principles as Inspector.
+                  When routine rounds expose human crews to 765kV arc-flash electrocution, toxic refinery gases, or jagged ballast gravel, Inspector takes the walkdown. Radiometric thermal scanning and autonomous SAP work-order dispatching.
                 </p>
-                <Btn to="dyn" kind="link">Meet Dyn</Btn>
+                <Btn to="inspector" kind="link">Explore Industrial Inspector</Btn>
               </div>
             </div>
           </Reveal>
         </div>
       </Band>
 
-      {/* Value Pillars */}
+      {/* Interactive Robot Configurator */}
       <Band alt>
-        <Head eyebrow="What sets us apart" title="Built for real Indian industrial conditions." />
+        <Head
+          eyebrow="Interactive Configurator"
+          title="Build Your Everyday Purpose Robot"
+          sub="Select your specific daily task, chassis type, and modular payload to configure an affordable robot tailored to your needs."
+        />
+        <Reveal y={24}>
+          <RobotConfigurator />
+        </Reveal>
+      </Band>
+
+      {/* Everyday Use Cases Grid */}
+      <Band>
+        <Head
+          eyebrow="Everyday Applications"
+          title="Where our robots work every single day."
+          sub="Robotics should solve tangible everyday friction for small businesses, community clinics, and local manufacturers."
+        />
         <div className="cols3">
           <Reveal delay={0.05} y={24}>
-            <div className="col">
-              <h3>Legs where wheels stop</h3>
-              <p>Gravel ballast, curbs, cable trenches, and steps are standard in Indian yards. Legged quadrupeds conquer them without ramps.</p>
+            <div className="card">
+              <div className="ico t">📦</div>
+              <h3>Workshops & Makerspaces</h3>
+              <p>Autonomous tool courier running drill bits, fasteners, and parts between workbenches so craftspeople stay focused on making.</p>
             </div>
           </Reveal>
           <Reveal delay={0.15} y={24}>
-            <div className="col">
-              <h3>Edge autonomy without cloud lag</h3>
-              <p>Perception and navigation run 100% on the onboard Jetson Orin compute, so patrols continue even during network dropouts.</p>
+            <div className="card">
+              <div className="ico t">🏥</div>
+              <h3>Clinics & Care Facilities</h3>
+              <p>Quietly transports medical supplies, specimen vials, and patient meals down corridors, giving healthcare workers more time with patients.</p>
             </div>
           </Reveal>
           <Reveal delay={0.25} y={24}>
-            <div className="col">
-              <h3>Hardened for 765kV & coastal heat</h3>
-              <p>Faraday shielding and sealed enclosures protect against high-EMF electrical noise, heavy monsoons, and saline coastal air.</p>
+            <div className="card">
+              <div className="ico t">👋</div>
+              <h3>Offices & Retail Stores</h3>
+              <p>Welcomes visitors, provides indoor directions, runs inter-desk courier errands, and performs scheduled night room rounds.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.35} y={24}>
+            <div className="card">
+              <div className="ico">⚡</div>
+              <h3>Substations & Refineries</h3>
+              <p>Continuous 24/7 radiometric thermal scans in 400kV/765kV switchyards, keeping human technicians safe from lethal arc flash.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.45} y={24}>
+            <div className="card">
+              <div className="ico t">🎓</div>
+              <h3>Classrooms & Universities</h3>
+              <p>Accessible open-software ROS 2 platform that lets students learn robotics hands-on without requiring multi-lakh grant budgets.</p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.55} y={24}>
+            <div className="card">
+              <div className="ico">🌾</div>
+              <h3>Warehouses & Agro Storage</h3>
+              <p>Autonomous nightly rounds checking grain temperature sensors, rodent traps, and humidity indicators across large storage sheds.</p>
             </div>
           </Reveal>
         </div>
       </Band>
 
-      {/* Live RaaS ROI Calculator Module */}
-      <Band>
+      {/* RaaS ROI Calculator Module */}
+      <Band alt>
         <Head
-          eyebrow="Interactive Economics"
-          title="Calculate Your Plant's Inspection Savings"
-          sub="See how switching from manual walkdowns to Robotics-as-a-Service (RaaS) eliminates upfront CapEx and delivers instant positive ROI."
+          eyebrow="Commercial Viability"
+          title="Predictable Economics: Buy or Rent as a Service"
+          sub="For everyday small businesses, Dyn is priced affordably outright. For heavy industrial sites, Inspector operates as a monthly zero-CapEx service."
         />
         <RoiCalculator />
       </Band>
 
       <Cta
-        title="Tell us what you want to inspect, automate or teach."
-        text="We reply to every inquiry from plant managers, electrical engineers, and students."
-        to="platform"
-        label="Read about the platform"
+        title="Tell us what you want to automate, build or teach."
+        text="Whether you run a workshop, manage a clinic, or oversee a 400kV switchyard in Visakhapatnam, we're ready to collaborate."
+        to="contact"
+        label="Start a conversation"
       />
     </>
   );
 }
 
 // ==========================================
-// INTERACTIVE ROI CALCULATOR COMPONENT
+// ROI CALCULATOR COMPONENT
 // ==========================================
 function RoiCalculator() {
   const [sites, setSites] = useState(4);
@@ -160,7 +194,7 @@ function RoiCalculator() {
 
           <div style={{ marginBottom: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span>Number of Substations / Plant Units:</span>
+              <span>Number of Facilities / Sites:</span>
               <strong className="mono" style={{ color: 'var(--accent)' }}>{sites} {sites === 1 ? 'Site' : 'Sites'}</strong>
             </div>
             <input
@@ -190,7 +224,7 @@ function RoiCalculator() {
           </div>
 
           <div style={{ padding: '16px', background: 'var(--bg2)', borderRadius: '6px', fontSize: '14px', color: 'var(--muted)' }}>
-            <strong>Predictable OpEx:</strong> Includes 1x Vajra/Inspector quadruped per site, autonomous all-weather docking station, sensor payload maintenance, and automated SAP work order dispatch.
+            <strong>Zero Upfront CapEx:</strong> Includes robot fleet deployment, autonomous weather-sealed docking stations, continuous maintenance, spare parts, and direct ERP/SAP integration.
           </div>
         </div>
 
@@ -201,7 +235,7 @@ function RoiCalculator() {
               ₹{netSavings >= 100 ? (netSavings / 100).toFixed(2) + ' Cr' : netSavings.toFixed(1) + ' Lakhs'}
             </div>
             <p style={{ color: 'var(--muted)', fontSize: '15px', lineHeight: 1.6 }}>
-              Direct savings from reduced unplanned arc-flash shutdowns, lower third-party inspection costs, and eliminated human safety liabilities.
+              Direct operational savings achieved by eliminating human safety hazards, reducing unplanned shutdowns, and automating routine facility rounds.
             </p>
           </div>
 
@@ -215,7 +249,7 @@ function RoiCalculator() {
               <span className="mono">₹{raasAnnualTotal >= 100 ? (raasAnnualTotal / 100).toFixed(2) + ' Cr' : raasAnnualTotal.toFixed(1) + ' L'}</span>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <span style={{ color: 'var(--muted)' }}>Upfront Hardware CapEx:</span>
+              <span style={{ color: 'var(--muted)' }}>Hardware CapEx:</span>
               <span className="mono" style={{ color: 'var(--teal)', fontWeight: 700 }}>₹0 (Zero CapEx)</span>
             </div>
           </div>
@@ -226,67 +260,142 @@ function RoiCalculator() {
 }
 
 // ==========================================
-// VIEW 2: INSPECTOR (Live Mission Control Console)
+// VIEW 2: EVERYDAY ROBOTS (Dyn Series Deep-Dive)
 // ==========================================
-function InspectorView() {
-  const [feedMode, setFeedMode] = useState('thermal'); // 'thermal' | 'optical' | 'lidar' | 'acoustic'
-  const [orderSent, setOrderSent] = useState(false);
-
-  const hazards = [
-    ['bolt', 'Electrical hazard', 'Switchyards from 220kV to 765kV expose crews to electrocution and arc flash on every round.'],
-    ['cloud', 'Toxic gas and heat', 'Refinery tank farms and process units add toxic gas leaks and heat stroke to routine inspections.'],
-    ['steps', 'Terrain that stops wheels', 'Loose ballast rock, curbs, cable trenches, and steps are everywhere. Legs go where wheels cannot.']
-  ];
-
-  const pay = [
-    ['thermo', 'Radiometric thermal', 'Finds hotspots on joints, bushings, and breakers before catastrophic flashover.'],
-    ['zoom', '30x Optical zoom', 'Close inspection from a safe distance, with high-resolution imagery saved as audit evidence.'],
-    ['gauge', 'Gauge and dial reading', 'Edge neural nets read analog needles and level glasses, bringing legacy equipment online.'],
-    ['wave', 'Acoustic detection', 'Listens for partial discharge and abnormal sounds from valves, pipes, and rotating equipment.'],
-    ['radar', 'LiDAR navigation', 'Maps the site and navigates without GPS, with Faraday shielding for high-EMF switchyards.'],
-    ['doc', 'Work order generation', 'Findings become work orders in SAP or Maximo with the radiometric evidence attached.']
-  ];
-
-  const flow = [
-    ['Patrol', 'Scheduled autonomous routes, with automatic return to outdoor dock to recharge.'],
-    ['Capture', 'Thermal, optical, and acoustic readings recorded at every critical inspection point.'],
-    ['Analyse', 'Gauges are read and temperatures compared against baseline thresholds on the edge compute.'],
-    ['Act', 'Anomalies trigger instant work orders with evidence for the maintenance team.']
+function DynView() {
+  const everydayDuties = [
+    ['Tool & Parts Runner', 'Carries up to 15 kg of tools, CNC jigs, and hardware between technicians in workshops and fabrication yards.'],
+    ['Clinic & Hospital Courier', 'Transports patient files, laboratory samples, and medicine trays down sterile corridors with collision-free navigation.'],
+    ['Indoor Night Watch', 'Executes quiet scheduled patrols after hours, verifying that warehouse doors, gates, and windows are securely closed.'],
+    ['Front-Desk Hospitality', 'Greets visitors, announces guest arrivals to team members, and escorts clients to designated conference rooms.'],
+    ['Library & Archive Stacker', 'Assists librarians in shelving and returns sorting, carrying stacks of books across multi-floor facilities.'],
+    ['Open ROS 2 Sandbox', 'A fully hackable robotics platform for engineering colleges, clubs, and researchers to develop custom AI behaviors.']
   ];
 
   return (
     <>
       <PageHead
-        eyebrow="Inspector · Industrial line"
-        title="Inspection without the walk-down."
-        sub="A legged inspection robot with a multi-modal payload for substations, refineries, and heavy plants. It walks the rounds so people stay clear of the hazard."
-        visual={
-          <figure className="visual">
-            <Raw html={YARD_SVG} className="art" label="Illustration of a switchyard with a scanning line and thermal hotspot" />
-            <figcaption>Substation live telemetry feed. Radiometric hotspot identified.</figcaption>
-          </figure>
-        }
+        eyebrow="Everyday Service Robotics"
+        tone="t"
+        title="A capable assistant for regular human tasks."
+        sub="Dyn is our approachable, modular robot built for everyday service: running errands, carrying payloads, and making small businesses and community facilities more productive."
+        visual={<DynInteractive />}
+        extra={<span className="chip">Available for Early Trials</span>}
+      />
+
+      <Band>
+        <Head
+          eyebrow="Everyday Utility"
+          tone="t"
+          title="Practical help where hands are needed."
+          sub="Dyn is designed around safety, low noise, and gentle human interaction. No intimidating metallic exoskeletons — just honest utility."
+        />
+        <div className="cols3">
+          {everydayDuties.map(([t, d], i) => (
+            <Reveal key={t} delay={i * 0.08} y={24}>
+              <div className="card">
+                <h3>{t}</h3>
+                <p>{d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Band>
+
+      <Band alt>
+        <Head
+          eyebrow="Configure & Price"
+          tone="t"
+          title="Build your Dyn specification."
+          sub="Choose attachments and payloads suited to your daily routine."
+        />
+        <Reveal y={24}>
+          <RobotConfigurator />
+        </Reveal>
+      </Band>
+
+      <Band>
+        <div className="two">
+          <div>
+            <Head eyebrow="Human-Safe Engineering" tone="t" title="Safe to stand and work beside." />
+            <ul className="checks t">
+              <li><span><b>Soft Compliance: </b>Rounded bumpers, low operational center of gravity, and speed capped safely at 1.5 m/s.</span></li>
+              <li><span><b>Instant Halo Stop: </b>Dual ultrasonic and depth camera proximity zones stop the robot 50 cm before any human contact.</span></li>
+              <li><span><b>Whisper Quiet: </b>Direct-drive brushless hub motors produce less than 42 dB of sound — quieter than a modern refrigerator.</span></li>
+              <li><span><b>Modular Swap: </b>Trays, lockable medicine boxes, tablet screens, and robotic grippers swap out in under 2 minutes.</span></li>
+            </ul>
+          </div>
+          <div>
+            <Head eyebrow="Technical Specifications" tone="t" title="Dyn Series 1 Specifications." />
+            <dl className="spec" style={{ margin: 0 }}>
+              <dt>Payload</dt>
+              <dd>15 kg cargo tray / 30 kg towing capacity</dd>
+              <dt>Runtime</dt>
+              <dd>6 to 8 hours continuous operational cycle</dd>
+              <dt>Navigation</dt>
+              <dd>360° 2D LiDAR + Stereo Depth Camera (No markers needed)</dd>
+              <dt>Chassis</dt>
+              <dd>Sealed aluminum unibody with low-friction urethane tires</dd>
+              <dt>Software</dt>
+              <dd>ROS 2 Humble / Python SDK / Web Remote UI</dd>
+              <dt>Price</dt>
+              <dd>Starting at ₹42,000 for education & small businesses</dd>
+            </dl>
+          </div>
+        </div>
+      </Band>
+
+      <Cta
+        title="Bring Dyn into your workshop, clinic or lab."
+        text="Tell us about the everyday chores your team handles. We'll set up a live demonstration."
+        to="contact"
+        label="Request a Demonstration"
+      />
+    </>
+  );
+}
+
+// ==========================================
+// VIEW 3: INDUSTRIAL INSPECTOR (Extreme Terrains)
+// ==========================================
+function InspectorView() {
+  const [feedMode, setFeedMode] = useState('thermal');
+  const [orderSent, setOrderSent] = useState(false);
+
+  const hazards = [
+    ['bolt', 'Electrical arc-flash hazard', 'Switchyards from 220kV to 765kV expose human maintenance crews to fatal electrocution on routine rounds.'],
+    ['cloud', 'Toxic fumes and heat stress', 'Refinery tank farms and coastal chemical units expose technicians to hydrocarbon vapor leaks and 48°C summer heat.'],
+    ['steps', 'Terrain that stops wheels', 'Loose ballast rock, curbs, 15cm cable gutters, and catwalk stairs are impassable for wheeled AMRs. Legs walk everywhere.']
+  ];
+
+  return (
+    <>
+      <PageHead
+        eyebrow="Extreme Environment Line"
+        title="Hazardous inspection without human risk."
+        sub="A rugged quadruped equipped with multi-spectral thermal, optical, and acoustic payloads for coastal substations, refineries, and heavy steel plants in Visakhapatnam and nationwide."
+        visual={<QuadrupedInteractive />}
         extra={
           <div className="btns">
-            <Btn to="contact" kind="primary">Request a pilot</Btn>
-            <Btn to="platform">See the stack</Btn>
+            <Btn to="contact" kind="primary">Schedule a Substation Trial</Btn>
+            <Btn to="platform">View Sensor Stack</Btn>
           </div>
         }
       />
 
-      {/* Interactive Substation Mission Simulator Console */}
+      {/* Interactive Substation Simulator */}
       <Band>
         <Head
-          eyebrow="Interactive Console"
-          title="Simulate a Live Substation Round"
-          sub="Switch between the sensor feeds below to see how Inspector detects equipment degradation before failure occurs."
+          eyebrow="Mission Simulation"
+          title="Interactive Substation Inspection Console"
+          sub="Toggle between multi-spectral camera feeds to observe how Inspector pinpoints equipment degradation before arc flash occurs."
         />
         <Reveal y={24}>
           <div style={{ background: 'var(--surface)', border: '1px solid var(--line)', borderRadius: '8px', overflow: 'hidden' }}>
             <div style={{ background: 'var(--bg2)', padding: '16px 24px', borderBottom: '1px solid var(--line)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <span className="mono" style={{ color: 'var(--accent)', fontWeight: 700 }}>ASSET: 400KV TRANSFORMER T-02 (BAY 04)</span>
-                <span className="mono" style={{ fontSize: '11px', color: 'var(--muted)' }}>| VIZAG INDUSTRIAL GRID</span>
+                <span className="mono" style={{ fontSize: '11px', color: 'var(--muted)' }}>| VISAKHAPATNAM 400KV HUB</span>
               </div>
               <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                 {[
@@ -308,7 +417,7 @@ function InspectorView() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(280px, 1fr)', minHeight: '380px' }}>
-              <div style={{ background: feedMode === 'thermal' ? '#030712' : '#0a1017', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--line)', position: 'relative' }}>
+              <div style={{ background: feedMode === 'thermal' ? '#030712' : '#0a1017', padding: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRight: '1px solid var(--line)' }}>
                 <div style={{ width: '100%', maxWidth: '520px' }}>
                   {feedMode === 'thermal' && (
                     <div style={{ textAlign: 'center' }}>
@@ -381,9 +490,8 @@ function InspectorView() {
         </Reveal>
       </Band>
 
-      {/* Hazards Breakdown */}
       <Band alt>
-        <Head eyebrow="The risk" title="Routine rounds put people in harm’s way." />
+        <Head eyebrow="The Hazards" title="What Inspector protects human crews from." />
         <div className="cols3">
           {hazards.map(([ico, t, d], i) => (
             <IconCard key={ico} icon={ico} title={t} text={d} delay={i * 0.1} />
@@ -391,327 +499,54 @@ function InspectorView() {
         </div>
       </Band>
 
-      {/* Multi-Modal Payload Specs */}
-      <Band>
-        <Head
-          eyebrow="Payload"
-          title="Six capabilities in one sealed unit."
-          sub="Our engineering focuses on what makes an inspection valuable: sensing, autonomy, and actionable analytics. The walking base is rugged commercial hardware."
-        />
-        <div className="cols3">
-          {pay.map(([ico, t, d], i) => (
-            <IconCard key={ico} icon={ico} title={t} text={d} delay={i * 0.08} />
-          ))}
-        </div>
-      </Band>
-
-      {/* Workflow */}
-      <Band alt>
-        <Head eyebrow="Workflow" title="From patrol to fix, without a person in the yard." />
-        <div className="steps">
-          {flow.map(([title, desc], i) => (
-            <Reveal key={title} delay={i * 0.1} y={20}>
-              <div className="step">
-                <span className="mono">Step {i + 1}</span>
-                <h3>{title}</h3>
-                <p>{desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Band>
-
-      {/* Commercial RaaS Model */}
-      <Band>
-        <div className="two">
-          <Reveal delay={0.1} y={24}>
-            <div className="card">
-              <Eyebrow>Commercial model</Eyebrow>
-              <h3>Robotics as a Service</h3>
-              <p>Plants pay from their operating maintenance budget. No large capital expenditure line item for unproven hardware.</p>
-              <div className="price">
-                ₹1.5L to ₹2.5L <small>per month, indicative</small>
-              </div>
-              <ul className="checks">
-                <li>Robot, sensor payload, and outdoor docking station</li>
-                <li>Comprehensive maintenance, battery swaps, and local spares</li>
-                <li>Continuous software, SLAM, and defect model updates</li>
-                <li>Direct SAP PM and Maximo work-order integration</li>
-              </ul>
-            </div>
-          </Reveal>
-
-          <Reveal delay={0.2} y={24}>
-            <div className="card">
-              <Eyebrow>Built for</Eyebrow>
-              <h3>Where a missed fault is expensive</h3>
-              <p>Power transmission utilities, coastal petrochemical refineries, and heavy steel/chemical plants.</p>
-              <ul className="checks">
-                <li>AIS and GIS substations from 220kV to 765kV</li>
-                <li>Refineries, petrochemical units, and tank storage farms</li>
-                <li>Integrated steel manufacturing and port material handling</li>
-              </ul>
-            </div>
-          </Reveal>
-        </div>
-      </Band>
-
       <Cta
-        title="Run a pilot at your site."
-        text="Tell us about your substation or plant and the rounds your team walks today. We scope a pilot around them."
-        to="company"
-        label="See the roadmap"
+        title="Schedule a 30-day trial at your facility."
+        text="We run on-site trials across transmission substations, steel plants, and refineries in Andhra Pradesh and nationwide."
+        to="contact"
+        label="Book a Field Survey"
       />
     </>
   );
 }
 
 // ==========================================
-// VIEW 3: DYN (Mechatronics & Gait Simulator)
-// ==========================================
-function DynView() {
-  const [trotFreq, setTrotFreq] = useState(1.2);
-  const [stepHeight, setStepHeight] = useState(12);
-  const [terrain, setTerrain] = useState('gravel');
-
-  const who = [
-    ['Classrooms and clubs', 'A robot students can drive on day one and program as they learn.'],
-    ['Makers and developers', 'A friendly base to add sensors, run ROS 2 nodes, and change how it behaves.'],
-    ['Small businesses', 'Light duties such as greeting visitors, patrolling a workshop, or checking on a lab.']
-  ];
-  const grow = [
-    ['Learn', 'Drive it, then program it with visual blocks or Python.'],
-    ['Build', 'Add sensors and write custom behaviours with open robotics tools.'],
-    ['Deploy', 'Give it a real job in your workshop, shop, or laboratory.']
-  ];
-  const goals = [
-    ['Open software', 'Friendly to ROS 2 and standard robotics tools, so skills carry over.'],
-    ['Safe by default', 'Soft edges, limited speed, and clear physical stop.'],
-    ['Repairable', 'Modular parts that can be swapped, with open guides to match.'],
-    ['Shared brain', 'Perception software built on the exact same ideas as Inspector.']
-  ];
-
-  const terrainSpecs = {
-    gravel: { name: 'Switchyard Ballast Gravel', slip: '0.8%', power: (180 + trotFreq * 80).toFixed(0) },
-    trench: { name: '15cm Cable Gutter / Trench', slip: '1.2%', power: (210 + trotFreq * 95).toFixed(0) },
-    catwalk: { name: '35° Incline Metal Grating', slip: '0.4%', power: (240 + trotFreq * 110).toFixed(0) },
-    mud: { name: 'Coastal Monsoon Silt', slip: '2.5%', power: (260 + trotFreq * 120).toFixed(0) }
-  };
-
-  return (
-    <>
-      <PageHead
-        eyebrow="Dyn · Entry level line"
-        tone="t"
-        title="A first robot that is easy to start with."
-        sub="Dyn is our approachable robot line for classrooms, robotics clubs, makers, and small businesses. Capable enough to keep, simple enough to begin."
-        visual={
-          <figure className="visual">
-            <Raw html={DYN_SVG} className="art small" label="Animated illustration of Dyn, a friendly wheeled robot waving and blinking" />
-            <figcaption>Dyn concept robot. Interactive wheeled prototype.</figcaption>
-          </figure>
-        }
-        extra={<span className="chip">Concept Stage</span>}
-      />
-
-      {/* Interactive Gait & Terrain Tuner */}
-      <Band>
-        <Head
-          eyebrow="Interactive Simulation"
-          tone="t"
-          title="Quadruped Gait & Terrain Controller"
-          sub="Adjust gait frequency, step obstacle clearance, and terrain presets to view simulated power draw and kinematics."
-        />
-        <Reveal y={24}>
-          <div className="two" style={{ background: 'var(--surface)', border: '1px solid var(--line)', padding: '36px', borderRadius: '8px' }}>
-            <div>
-              <h3 style={{ marginBottom: '20px' }}>Gait Tuning Parameters</h3>
-
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span>Trot Frequency:</span>
-                  <strong className="mono" style={{ color: 'var(--teal)' }}>{trotFreq} Hz</strong>
-                </div>
-                <input
-                  type="range"
-                  min="0.6"
-                  max="2.2"
-                  step="0.1"
-                  value={trotFreq}
-                  style={{ width: '100%', accentColor: 'var(--teal)' }}
-                  onChange={(e) => setTrotFreq(parseFloat(e.target.value))}
-                />
-              </div>
-
-              <div style={{ marginBottom: '24px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                  <span>Step Obstacle Clearance:</span>
-                  <strong className="mono" style={{ color: 'var(--teal)' }}>{stepHeight} cm</strong>
-                </div>
-                <input
-                  type="range"
-                  min="5"
-                  max="22"
-                  step="1"
-                  value={stepHeight}
-                  style={{ width: '100%', accentColor: 'var(--teal)' }}
-                  onChange={(e) => setStepHeight(parseInt(e.target.value))}
-                />
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '8px' }}>Terrain Preset:</label>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-                  {Object.entries(terrainSpecs).map(([k, v]) => (
-                    <button
-                      key={k}
-                      className={`btn ${terrain === k ? 'primary' : ''}`}
-                      style={{ minHeight: '34px', padding: '0 12px', fontSize: '12px' }}
-                      onClick={() => setTerrain(k)}
-                    >
-                      {v.name.split(' ')[0]}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', borderLeft: '1px solid var(--line)', paddingLeft: '32px' }}>
-              <div>
-                <span className="mono">KINEMATIC SOLVER FEEDBACK</span>
-                <div style={{ margin: '14px 0 20px', padding: '16px', background: 'var(--bg2)', borderRadius: '6px' }}>
-                  <div style={{ fontSize: '15px', fontWeight: 600, color: 'var(--ink)' }}>{terrainSpecs[terrain].name}</div>
-                  <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>
-                    {stepHeight >= 15 ? '✓ Full clearance over 15cm cable gutters.' : '⚠ Low clearance (<15cm) — risk of curb impact.'}
-                  </div>
-                </div>
-              </div>
-
-              <dl className="spec" style={{ margin: 0, fontSize: '13px' }}>
-                <dt>Motor Power Draw</dt>
-                <dd className="mono">{terrainSpecs[terrain].power} W</dd>
-                <dt>Ground Slip Ratio</dt>
-                <dd className="mono" style={{ color: 'var(--teal)' }}>{terrainSpecs[terrain].slip}</dd>
-                <dt>Foot Stability</dt>
-                <dd className="mono" style={{ color: 'var(--accent)', fontWeight: 700 }}>100% Zero-Slip</dd>
-              </dl>
-            </div>
-          </div>
-        </Reveal>
-      </Band>
-
-      <Band alt>
-        <Head eyebrow="Who it is for" tone="t" title="Robots for more than factories." />
-        <div className="cols3">
-          {who.map(([title, desc], i) => (
-            <Reveal key={title} delay={i * 0.1} y={24}>
-              <div className="card">
-                <h3>{title}</h3>
-                <p>{desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Band>
-
-      <Band>
-        <Head eyebrow="Path" tone="t" title="Room to grow." sub="What we are designing Dyn to support as you scale." />
-        <div className="steps">
-          {grow.map(([title, desc], i) => (
-            <Reveal key={title} delay={i * 0.12} y={20}>
-              <div className="step">
-                <span className="mono">Stage {i + 1}</span>
-                <h3>{title}</h3>
-                <p>{desc}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Band>
-
-      <Band alt>
-        <div className="two">
-          <div>
-            <Head eyebrow="Design goals" tone="t" title="What Dyn is built around." />
-            <ul className="checks t">
-              {goals.map(([title, desc]) => (
-                <li key={title}>
-                  <span><b>{title}. </b>{desc}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <Head eyebrow="Spec sheet" tone="t" title="Preliminary architecture." />
-            <dl className="spec" style={{ margin: 0 }}>
-              <dt>Drive</dt>
-              <dd>Differential drive with high-traction wheels</dd>
-              <dt>Sensors</dt>
-              <dd>2D LiDAR + Depth camera + Ultrasonic</dd>
-              <dt>Software</dt>
-              <dd>ROS 2 Humble / Python SDK</dd>
-              <dt>Price</dt>
-              <dd>Targeted under ₹60,000 for schools</dd>
-              <dt>Availability</dt>
-              <dd>Alpha kits Q3 2027</dd>
-            </dl>
-          </div>
-        </div>
-      </Band>
-
-      <Cta
-        title="Want Dyn in your classroom, club or shop?"
-        text="Tell us what you would do with it. Your input directly shapes what we build first."
-        to="inspector"
-        label="See the industrial line"
-      />
-    </>
-  );
-}
-
-// ==========================================
-// VIEW 4: PLATFORM (Engineering & Architecture)
+// VIEW 4: PLATFORM (Technology & Shared Brain)
 // ==========================================
 function PlatformView() {
   const cols = [
-    ['Hardware', 'NVIDIA Jetson Orin compute, 3D LiDAR, radiometric thermal core, optical PTZ camera, and acoustic sensing on a commercial legged base.'],
-    ['Software', 'ROS 2 Humble for the robot stack, with detection and OCR models trained in cloud simulation (Isaac Sim, Gazebo, MuJoCo) before field trials.'],
-    ['Integrations', 'Inspection findings flow into SAP PM and IBM Maximo as automated work orders, with radiometric images and coordinate data attached.']
+    ['Hardware Modularity', 'NVIDIA Jetson Orin compute, solid-state LiDAR, radiometric thermal cores, and brushless QDD actuators shared across both Dyn and Inspector lines.'],
+    ['Unified Software Core', 'ROS 2 Humble with open Python SDKs, running FAST-LIO2 SLAM for GPS-denied environments and TensorRT-optimized neural nets for gauge OCR.'],
+    ['Enterprise & Local APIs', 'From local web UI remote controls for workshop owners to direct SAP PM and IBM Maximo connectors for heavy industrial facilities.']
   ];
-  const hard = [
-    ['Shielded for high EMF', 'Braided grounding straps, shielded twisted pair cabling, and aluminum Faraday enclosures keep controllers and LiDAR steady near 400kV and above.'],
-    ['Sealed for coastal sites', 'IP65 enclosures and a weather-sealed charging dock protect against fine industrial dust, heavy coastal monsoons, and ambient heat.'],
-    ['Ready for supply shocks', 'Modular architecture allows actuators, sensors, and compute boards to be swapped when import lead times stretch.']
-  ];
+
   const steps = [
-    ['Sense', 'Thermal, optical, acoustic, and LiDAR data captured synchronously at every inspection waypoint.'],
-    ['Perceive', 'Edge neural nets detect equipment, read analog gauges via OCR, and locate thermal hotspots.'],
-    ['Decide', 'Onboard computer plans routes, navigates around obstacles without GPS, and flags anomalies.'],
-    ['Act', 'The quadruped traverses gravel, climbs steps, zooms in, and re-inspects if a reading looks abnormal.'],
-    ['Report', 'Verified findings and timestamped evidence flow straight into your plant ERP as actionable work orders.']
+    ['Sense', 'Thermal, optical, acoustic, and LiDAR data captured synchronously at every inspection or patrol point.'],
+    ['Perceive', 'Edge vision models detect obstacles, read analog dial needles, identify people, and locate thermal hotspots.'],
+    ['Decide', 'Onboard compute re-plans collision-free trajectories around moving humans, vehicles, or switchyard equipment.'],
+    ['Act', 'The robot walks, rolls, docks autonomously to recharge, or raises alarms when an anomaly exceeds thresholds.'],
+    ['Report', 'Actionable reports, delivery confirmations, or emergency work orders dispatch directly to the user or plant ERP.']
   ];
 
   return (
     <>
       <PageHead
-        eyebrow="Platform"
-        title="One stack from sensor to work order."
-        sub="Every Unexpected Dynamics robot shares the same approach: sense, perceive, decide, act, and report. Inspector runs the full chain. Dyn runs a lightweight variant."
+        eyebrow="Platform Architecture"
+        title="One shared robotics stack. Countless purposes."
+        sub="The perception algorithms keeping Inspector safe around 765kV busbars are the exact same algorithms keeping Dyn safe as it maneuvers past technicians in your workshop."
         visual={
-          <div className="visual" style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
-            <Raw html={QUAD_SVG} className="art" />
-            <div className="mono">SENSING AND REPORTING PIPELINE</div>
+          <div className="visual" style={{ display: 'grid', placeItems: 'center', minHeight: 280 }}>
+            <Raw html={markSvg(160, true)} className="art" />
           </div>
         }
       />
 
       <Band>
-        <Head eyebrow="Pipeline" title="Five stages, all on the robot except the last." sub="Perception and path planning run entirely on the onboard edge compute. Only the final work order leaves the plant site." />
+        <Head eyebrow="Unified Pipeline" title="Five stages, 100% on-device autonomy." sub="Perception and local navigation run on the robot, ensuring continuous duty even during Wi-Fi or cellular blackouts." />
         <Pipeline steps={steps} />
       </Band>
 
       <Band alt>
-        <Head eyebrow="Stack" title="Proven parts, our own intelligence." />
+        <Head eyebrow="Architecture" title="Engineered for longevity and repairability." />
         <div className="cols3">
           {cols.map(([t, d], i) => (
             <Reveal key={t} delay={i * 0.1} y={24}>
@@ -724,31 +559,17 @@ function PlatformView() {
         </div>
       </Band>
 
+      {/* Technical FAQ */}
       <Band>
-        <Head eyebrow="Hardened for India" title="Designed for the sites we actually have." />
-        <div className="cols3">
-          {hard.map(([t, d], i) => (
-            <Reveal key={t} delay={i * 0.1} y={24}>
-              <div className="col">
-                <h3>{t}</h3>
-                <p>{d}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Band>
-
-      {/* Engineering FAQ Accordion */}
-      <Band alt>
-        <Head eyebrow="Technical FAQ" title="Frequently Asked Engineering Questions" />
+        <Head eyebrow="Engineering FAQ" title="Frequently Asked Technical Questions" />
         <FaqSection />
       </Band>
 
       <Cta
-        title="See it on your site."
-        text="We start with one inspection route and grow from there."
-        to="inspector"
-        label="See Inspector"
+        title="Explore our SDK and APIs."
+        text="We provide open documentation, Python libraries, and ROS 2 workspaces for developers and students."
+        to="contact"
+        label="Talk to an Engineer"
       />
     </>
   );
@@ -762,24 +583,24 @@ function FaqSection() {
 
   const faqs = [
     [
-      'Can the robot operate safely in 400kV and 765kV live switchyards?',
-      'Yes. The electronic core (NVIDIA Jetson Orin AGX and flight controllers) is housed inside a custom aluminum Faraday cage with braided grounding straps and ferrite-choked CAN buses. This prevents the high electromagnetic fields and corona discharge common in 400kV/765kV switchyards from resetting the system.'
+      'Why is Unexpected Dynamics focused on everyday purpose robotics instead of humanoids?',
+      'Humanoids are visually impressive but prohibitively expensive, mechanically fragile, and inefficient for 99% of practical tasks. Real humans in workshops, clinics, and plants need dependable helpers that carry cargo, read meters, patrol floors, and survive everyday wear without costing tens of lakhs.'
     ],
     [
-      'How does it localize and navigate without reliable GPS in switchyards?',
-      'Switchyards create multi-path GPS interference due to towering steel towers and high-voltage busbars. We use FAST-LIO2 solid-state LiDAR odometry paired with wheel/leg IMU odometry to build real-time 3D spatial point clouds and navigate autonomously with centimeter-level precision.'
+      'Can Dyn operate safely around children, patients, and pets?',
+      'Yes. Dyn is engineered with dual soft-limit bumpers, compliant wheel suspension, speed limited to comfortable walking pace (1.2–1.5 m/s), and instant ultrasonic halo cutoffs that disengage motor drive if an obstacle approaches within 50 centimeters.'
     ],
     [
-      'How does it handle extreme Indian summers and coastal monsoon rains?',
-      'The robot has an IP65 ingress rating against heavy coastal monsoons and abrasive dust. Internal heat from the Jetson Orin compute is routed through copper vapor chambers to the aluminum belly pan, allowing continuous operation up to 48°C ambient air temperatures.'
+      'How does Inspector survive 765kV electromagnetic fields in electrical switchyards?',
+      'The electronic core is enclosed in a precision aluminum Faraday cage with braided copper grounding straps and ferrite-choked CAN bus lines. This eliminates RF noise and electrostatic resets induced by massive EHV electromagnetic fields.'
     ],
     [
-      'What happens when the battery runs low during an inspection patrol?',
-      'When state-of-charge drops below 20%, the robot autonomously navigates back to its outdoor contact charging dock using visual AprilTags and reflective LiDAR targets. It fast-charges from 20% to 80% in 45 minutes before resuming its scheduled route.'
+      'Can students or developers write custom software for Dyn?',
+      'Absolutely. Dyn ships with full ROS 2 Humble compatibility, a lightweight Python SDK, and standard MQTT/Websocket endpoints. You can write custom autonomous behaviors, attach third-party cameras, or integrate your own computer vision models.'
     ],
     [
-      'How does it integrate with our plant maintenance software (SAP PM / Maximo)?',
-      'The robot publishes standardized JSON payloads over secure local Wi-Fi, private 5G, or wired dock Ethernet. When a hotspot exceeds the configured threshold, a REST/MQTT API triggers a draft or high-priority maintenance order in SAP S/4HANA PM or IBM Maximo with exact GPS coordinates and radiometric photos attached.'
+      'How does autonomous charging work for both robots?',
+      'Both Dyn and Inspector use weather-resistant contact charging docks. The robots navigate to within 2 meters using LiDAR SLAM, then lock onto optical AprilTags and infrared beacons to dock within ±15mm accuracy without human intervention.'
     ]
   ];
 
@@ -822,28 +643,29 @@ function FaqSection() {
 }
 
 // ==========================================
-// VIEW 5: COMPANY (Roadmap, Identity & Team)
+// VIEW 5: COMPANY (Vision, Roadmap, Identity)
 // ==========================================
 function CompanyView() {
   const road = [
-    ['Months 0 to 3', 'Validate & Model', 'Customer discovery with plant managers in Visakhapatnam and southern regional transmission circles, high-EMF requirements, and Isaac Sim physics simulation.'],
-    ['Months 3 to 6', 'Alpha Prototype', 'Sensor payload and ROS 2 autonomy stack integrated onto commercial quadruped base with custom Faraday enclosure and coastal corrosion seals.'],
-    ['Months 6 to 9', 'Field Trials & Docking', 'Live supervised runs at an anchor utility switchyard, testing 48°C ambient heat and autonomous contact charging dock.'],
-    ['Months 9 to 12', 'Paid Pilot & Scale', 'Convert trial into annual RaaS contract (₹1.8L/mo), live SAP work order integration, and scale commercial deployments.']
+    ['Months 0 to 3', 'Everyday & Industrial Validation', 'Field interviews with workshop owners, clinic administrators, and electrical transmission managers in Visakhapatnam and coastal Andhra Pradesh to define modular payload requirements.'],
+    ['Months 3 to 6', 'Alpha Prototypes & SDK', 'First functional batch of Dyn wheeled helpers and Inspector quadrupeds built with shared ROS 2 perception stack and modular battery charging docks.'],
+    ['Months 6 to 9', 'Live Multi-Site Pilots', 'Supervised pilot deployments in local Visakhapatnam fabrication shops, hospitals, and 400kV regional transmission substations testing coastal heat and reliability.'],
+    ['Months 9 to 12', 'Commercial Scale & Orders', 'Commence commercial orders for Dyn everyday service units and expand annual RaaS subscriptions across power and heavy industrial clients.']
   ];
+
   const how = [
-    ['Start narrow', 'One painful problem with paying customers beats a general-purpose humanoid.'],
-    ['Buy the commodity', 'Use proven actuator bases. Focus engineering on sensing, autonomy, and defect analytics.'],
-    ['Prove it on site', 'Paid pilots at real operational plants before scaling manufacturing batches.'],
-    ['Sell as a service', 'Charge from operational maintenance budgets (OpEx) so plant heads can easily say yes.']
+    ['Utility over theatrics', 'We measure success by chores completed and hazards eliminated, not by viral backflips.'],
+    ['Commodity hardware', 'We utilize proven actuators and off-the-shelf lithium cells, investing our engineering into autonomy and perception.'],
+    ['Built for Indian conditions', 'Designed from the ground up for coastal humidity, monsoon rains, loose gravel, and 48°C ambient heat.'],
+    ['Accessible economics', 'Priced so local small businesses and educational labs can actually own and deploy real robotics.']
   ];
 
   return (
     <>
       <PageHead
-        eyebrow="Company"
-        title="Dangerous and repetitive work should be done by machines built here."
-        sub="Unexpected Dynamics is an Indian robotics company headquartered in Visakhapatnam, Andhra Pradesh. We start with industrial inspection and build toward robots that more people can own, teach, and build on."
+        eyebrow="Company Vision"
+        title="Building basic robotics for everyday human purposes."
+        sub="Unexpected Dynamics is headquartered in Visakhapatnam (Vizag), Andhra Pradesh. We believe capable robotics shouldn't be reserved for elite research labs — it belongs in everyday workshops, stores, hospitals, and critical infrastructure."
         visual={
           <div className="visual" style={{ display: 'grid', placeItems: 'center', minHeight: 300 }}>
             <Raw html={markSvg(180, true)} className="art" />
@@ -852,12 +674,12 @@ function CompanyView() {
       />
 
       <Band>
-        <Head eyebrow="Roadmap" title="Twelve months from customer discovery to paid pilot." sub="Scroll down to follow the execution milestones." />
+        <Head eyebrow="Roadmap" title="Twelve months from customer discovery to commercial rollout." sub="Scroll down to follow the execution milestones." />
         <Timeline items={road} />
       </Band>
 
       <Band alt>
-        <Head eyebrow="Principles" title="How we operate." />
+        <Head eyebrow="Core Principles" title="How we think and engineer." />
         <div className="cols4">
           {how.map(([t, d], i) => (
             <Reveal key={t} delay={i * 0.08} y={24}>
@@ -872,9 +694,9 @@ function CompanyView() {
 
       <Band>
         <Head
-          eyebrow="Identity"
-          title="The mark."
-          sub="The D is a housing. The U is a leg with a joint at each end. The two orange dots are actuators, and the name is the point: the dynamics you did not expect from a machine this small."
+          eyebrow="Brand Identity"
+          title="The Unexpected Mark."
+          sub="The outer D represents the protective chassis housing. The inner U represents an articulated leg joint. The two orange points signify high-torque drive actuators. Unexpected Dynamics: capability where you least expect it."
         />
         <div className="tiles">
           <Reveal delay={0.1} y={24}>
@@ -905,17 +727,17 @@ function CompanyView() {
       </Band>
 
       <Cta
-        title="Building something similar, or want to collaborate?"
-        text="We regularly talk to plant engineers, transmission supervisors, robotics developers, and researchers."
-        to="platform"
-        label="Read the platform"
+        title="Interested in collaborating or joining our team?"
+        text="We regularly speak with robotics developers, embedded engineers, and local manufacturing partners in Andhra Pradesh."
+        to="contact"
+        label="Get in touch"
       />
     </>
   );
 }
 
 // ==========================================
-// VIEW 6: CONTACT & PILOT APPLICATION
+// VIEW 6: CONTACT (Visakhapatnam Base)
 // ==========================================
 function ContactView() {
   const [submitted, setSubmitted] = useState(false);
@@ -928,19 +750,19 @@ function ContactView() {
   return (
     <>
       <PageHead
-        eyebrow="Contact"
-        title="Start a pilot, or follow Dyn."
-        sub="Tell us where you work and what you would like a robot to do. Our engineering team in Visakhapatnam replies within 24 hours."
+        eyebrow="Contact & Collaboration"
+        title="Start an everyday pilot or substation trial."
+        sub="Tell us about the chores, deliveries, or inspections you want to automate. Our engineering team in Visakhapatnam replies within 24 hours."
         visual={
           <div className="card">
-            <h3>Direct Contact</h3>
+            <h3>Headquarters & Lab</h3>
             <dl className="spec" style={{ margin: 0 }}>
               <dt>Email</dt>
               <dd>contact@unexpecteddynamics.online</dd>
               <dt>Location</dt>
               <dd>Visakhapatnam (Vizag), Andhra Pradesh, India</dd>
-              <dt>Focus Sectors</dt>
-              <dd>High-Voltage Transmission, Refineries, Coastal Heavy Industry</dd>
+              <dt>Focus Areas</dt>
+              <dd>Everyday Service AMRs, Workshops, High-Voltage Transmission</dd>
             </dl>
           </div>
         }
@@ -950,27 +772,27 @@ function ContactView() {
         <div className="two">
           <Reveal delay={0.1} y={24}>
             <div className="card">
-              <Eyebrow>Industrial</Eyebrow>
-              <h3>Pilot Inspector at your site</h3>
-              <p>Tell us about your facility:</p>
-              <ul className="checks">
-                <li>Substation voltage (220kV, 400kV, 765kV AIS/GIS) or refinery unit</li>
-                <li>Inspection round frequency and current technician pain points</li>
-                <li>Specific hazards (arc flash, toxic gas, ballast gravel terrain)</li>
-                <li>Your maintenance system (SAP PM, IBM Maximo, or proprietary SCADA)</li>
+              <Eyebrow tone="t">Everyday & Industrial Pilot Scope</Eyebrow>
+              <h3>How we work with you:</h3>
+              <p>We work directly with local businesses and enterprise utilities:</p>
+              <ul className="checks t">
+                <li><b>Dyn On-Site Trial: </b>Workshop parts running, clinic courier rounds, or office hospitality pilot.</li>
+                <li><b>Inspector Substation Trial: </b>220kV to 765kV high-voltage switchyard radiometric thermal survey.</li>
+                <li><b>Custom Attachment Design: </b>Specialized tool racks, trays, or camera mounts built for your specific workflow.</li>
+                <li><b>Local Field Support: </b>Same-day engineering support and spares from our Visakhapatnam base.</li>
               </ul>
             </div>
           </Reveal>
 
           <Reveal delay={0.2} y={24}>
             <div className="card">
-              <Eyebrow tone="t">Pilot Application</Eyebrow>
+              <Eyebrow>Direct Inquiry Form</Eyebrow>
               {submitted ? (
                 <div style={{ padding: '32px 0', textAlign: 'center' }}>
                   <div style={{ fontSize: '3rem', marginBottom: '12px', color: 'var(--accent)' }}>✓</div>
-                  <h3 style={{ color: 'var(--accent)' }}>Assessment Request Received</h3>
+                  <h3 style={{ color: 'var(--accent)' }}>Inquiry Received!</h3>
                   <p style={{ marginTop: '8px', color: 'var(--muted)', fontSize: '15px' }}>
-                    Our field engineering team based in Visakhapatnam will contact you within 24 hours to schedule the site feasibility survey.
+                    Our engineering team in Visakhapatnam will review your requirements and reach out within 24 hours.
                   </p>
                 </div>
               ) : (
@@ -985,37 +807,39 @@ function ContactView() {
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Work Email</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Work Email / Phone</label>
                     <input
-                      type="email"
+                      type="text"
                       required
-                      placeholder="v.sharma@powerutility.in"
+                      placeholder="vikram@enterprise.in / +91 98765 43210"
                       style={{ width: '100%', padding: '10px 14px', borderRadius: 4, border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--ink)' }}
                     />
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Facility Classification & Voltage</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Primary Application</label>
                     <select
                       required
                       style={{ width: '100%', padding: '10px 14px', borderRadius: 4, border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--ink)' }}
                     >
-                      <option value="">Select facility classification...</option>
-                      <option value="765kv">765kV / 400kV Ultra High-Voltage AIS/GIS</option>
-                      <option value="220kv">220kV / 132kV Transmission Substation</option>
-                      <option value="refinery">Petrochemical Refinery / Tank Storage Farm</option>
-                      <option value="steel">Integrated Steel Plant / Coastal Heavy Industry</option>
+                      <option value="">Select your application...</option>
+                      <option value="dyn-workshop">Dyn — Workshop & Fabrication Parts Runner</option>
+                      <option value="dyn-clinic">Dyn — Clinic / Hospital Medicine & File Courier</option>
+                      <option value="dyn-store">Dyn — Retail / Office Hospitality & Patrol</option>
+                      <option value="dyn-edu">Dyn — Robotics Lab & Classroom Education</option>
+                      <option value="inspector-substation">Inspector — 220kV–765kV Substation Inspection</option>
+                      <option value="inspector-refinery">Inspector — Refinery / Chemical Plant Patrol</option>
                     </select>
                   </div>
                   <div>
-                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Inspection Priorities</label>
+                    <label style={{ display: 'block', fontSize: 13, fontWeight: 600, marginBottom: 6 }}>Tell us about the daily tasks you want to automate</label>
                     <textarea
                       rows={3}
-                      placeholder="400kV switchyard transformer bushing hot spots, SF6 gas leakage tracking, loose gravel accessibility..."
+                      placeholder="e.g. Need an autonomous tray robot to carry 10kg parts between assembly benches without getting stuck on door sills..."
                       style={{ width: '100%', padding: '10px 14px', borderRadius: 4, border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--ink)' }}
                     />
                   </div>
                   <button type="submit" className="btn primary" style={{ width: '100%', justifyContent: 'center' }}>
-                    Submit Pilot Assessment Request
+                    Submit Pilot Request
                   </button>
                 </form>
               )}
@@ -1039,8 +863,8 @@ export default function App() {
       <Header route={route} toggleTheme={toggleTheme} routes={ROUTES} />
       <main>
         {route === 'home' && <HomeView />}
-        {route === 'inspector' && <InspectorView />}
         {route === 'dyn' && <DynView />}
+        {route === 'inspector' && <InspectorView />}
         {route === 'platform' && <PlatformView />}
         {route === 'company' && <CompanyView />}
         {route === 'contact' && <ContactView />}
