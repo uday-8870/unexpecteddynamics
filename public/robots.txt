@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://unexpecteddynamics.com/sitemap.xml
+Sitemap: https://unexpecteddynamics.online/sitemap.xml
